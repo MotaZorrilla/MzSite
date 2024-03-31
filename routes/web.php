@@ -16,3 +16,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('site');
 });
+Route::get('/tetris', function () {
+    return view('tetris');
+});
+Route::get('/dash', function () {
+    return view('dash');
+});
