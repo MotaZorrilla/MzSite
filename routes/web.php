@@ -22,3 +22,6 @@ Route::get('/tetris', function () {
 Route::get('/dash', function () {
     return view('dash');
 });
+Route::get('/ray', function () {
+    return view('ray');
+});

@@ -885,7 +885,7 @@
                         <!-- tercer juego (Laberinto 3D) -->
                         <div class="swiper-slide">
                             <div class="testimonial-item" data-aos="fade-up" data-aos-delay="300">
-                                <a href="/labyrinth" target="blank">
+                                <a href="/ray" target="blank">
                                     <p>
                                         <i class="bx bxs-quote-alt-left quote-icon-left"></i>
                                         ⚡ Explore a three-dimensional maze full of mysteries and challenges.
