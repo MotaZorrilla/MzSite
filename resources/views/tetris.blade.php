@@ -162,36 +162,36 @@
                         <div id="level">Level: 1</div>
                         <div id="lives">vidas: 3</div>
                     </div>
-                    <h2>top-scores:</h2>
+                    <h4>Top Scores:</h4>
                     <div id="top-scores">
-                        <div class="score-item">
-                            <span>Oro</span>
+                        <div class="score-item score-gold">
+                            <span><i class="bi bi-trophy-fill"></i> Oro</span>
                             <span>5000 puntos</span>
                         </div>
-                        <div class="score-item">
-                            <span>Plata</span>
+                        <div class="score-item score-silver">
+                            <span><i class="bi bi-trophy-fill"></i> Plata</span>
                             <span>4500 puntos</span>
                         </div>
-                        <div class="score-item">
-                            <span>Bronce</span>
+                        <div class="score-item score-bronze">
+                            <span><i class="bi bi-trophy-fill"></i> Bronce</span>
                             <span>4000 puntos</span>
                         </div>
                     </div>
                     <div id="recent-scores">
                         <div class="score-item">
-                            <span>Bronce</span>
+                            <span>4</span>
                             <span>3000 puntos</span>
                         </div>
                         <div class="score-item">
-                            <span>Jugador 5</span>
+                            <span>5</span>
                             <span>2500 puntos</span>
                         </div>
                         <!-- Agrega más elementos según sea necesario -->
                     </div>
-                    <h2>Nivel:</h2>
+                    <h5>Nivel Fácil</h5>
                     <div id="difficulty-levels">
                         <div class="level-item">
-                            <span>Nivel Fácil - Primer Nivel</span>
+                            <span>Primer Nivel</span>
                             <span>100 puntos</span>
                         </div>
                     </div>

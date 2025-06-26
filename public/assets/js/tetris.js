@@ -1,541 +1,424 @@
-let gameOver = false;
-// help
-const modalLevels = document.getElementById("selectLevelModal");
-const modalQuestions = document.getElementById("questionsModal");
+document.addEventListener('DOMContentLoaded', function () {
+    let gameOver = false;
+    let gameInterval;
 
-// Lógica para seleccionar el nivel y ajustar el intervalo
-let speed = 0;
-let lives = 3; // Inicializar el número de vidas
-let score = 0;
-let level = 1;
-let levelEasy = document.getElementById("buttonEasy");
-let levelNormal = document.getElementById("buttonNormal")
-let levelHard = document.getElementById("buttonHard")
-let isEasyMode = false;
+    // Modals
+    const modalLevelsElement = document.getElementById("selectLabelModal");
+    const bootstrapLevelModal = new bootstrap.Modal(modalLevelsElement, {
+        keyboard: false,
+        backdrop: 'static'
+    });
 
-levelEasy.addEventListener('click', () => {
-    speed = 700;
-    isEasyMode = true;
-    modalLevels.close();
-    setInterval(moveTetromino, speed);
-});
-
-levelNormal.addEventListener('click', () => {
-    speed = 500;
-    modalLevels.close();
-    setInterval(moveTetromino, speed);
-});
-
-levelHard.addEventListener('click', () => {
-    speed = 100;
-    modalLevels.close();
-    console.log('dificil');
-    setInterval(moveTetromino, speed);
-});
+    const modalGameOverElement = document.getElementById("gameOverModal");
+    const bootstrapGameOverModal = new bootstrap.Modal(modalGameOverElement);
 
 
-// game Over
-const modalGameOver = document.getElementById("gameOverModal");
-const reset = document.getElementById("resetButton");
+    // Buttons
+    const levelEasy = document.getElementById("buttonEasy");
+    const levelNormal = document.getElementById("buttonNormal");
+    const levelHard = document.getElementById("buttonHard");
+    const reset = document.getElementById("resetButton");
+    const sound = document.getElementById("buttonMuted");
 
-reset.addEventListener("click", function () {
-    location.reload();
-    gameOverModal.close();
-});
+    // Game state variables
+    let speed = 0;
+    let lives = 3;
+    let score = 0;
+    let level = 1;
+    let isEasyMode = false;
 
-// sounds
-const bgm = document.createElement("audio");
-const breakSound = document.createElement("audio");
-const drop = document.createElement("audio");
-const lose = document.createElement("audio");
-const sound = document.getElementById("buttonMuted");
+    // Sounds
+    const bgm = new Audio("/assets/sounds/tetris.mp3");
+    bgm.loop = true;
+    const breakSound = new Audio("/assets/sounds/Whoosh.mp3");
+    const drop = new Audio("/assets/sounds/drop.mp3");
+    const lose = new Audio("/assets/sounds/sadTrombone.mp3");
 
-lose.setAttribute("src", "/assets/sounds/sadTrombone.mp3");
-lose.muted = true;
-
-bgm.setAttribute("src", "/assets/sounds/tetris.mp3");
-bgm.muted = true;
-//bgm.play();
-bgm.setAttribute("loop", true);
-
-breakSound.setAttribute("src", "/assets/sounds/Whoosh.mp3");
-breakSound.muted = true;
-
-drop.setAttribute("src", "/assets/sounds/drop.mp3");
-//drop.muted = true;
-
-// sound init
-sound.addEventListener("click", () => {
-    if (bgm.muted) {
-        bgm.play();
-        bgm.muted = false;
-        drop.muted = false;
-    } else {
-        bgm.pause();
-        bgm.muted = true;
-        drop.muted = true;
+    function toggleMute() {
+        const allSounds = [bgm, breakSound, drop, lose];
+        const isMuted = bgm.muted;
+        allSounds.forEach(s => s.muted = !isMuted);
+        if (isMuted) {
+            bgm.play().catch(e => console.log("Audio play was prevented."));
+        } else {
+            bgm.pause();
+        }
     }
-});
 
-//Generación de fondo dinámico
-let angulo_fondo = Math.random() * 360;
-let tono_fondo = Math.random() * 360;
-setInterval(() => {
-    document.body.style.background = `linear-gradient(
-                ${angulo_fondo}deg, 
-                hsl(${tono_fondo},100%,50%),
-                hsl(${tono_fondo},100%,20%)
-            )`
-    angulo_fondo += Math.random();
-    tono_fondo += Math.random();
-}, 100);
+    sound.addEventListener("click", toggleMute);
+    
+    function startGame(selectedSpeed, easyMode = false) {
+        if (gameInterval) {
+            clearInterval(gameInterval);
+        }
+        restartGame();
+        speed = selectedSpeed;
+        isEasyMode = easyMode;
 
-// Game board setup
-const BOARD_WIDTH = 10;
-const BOARD_HEIGHT = 20;
-const board = [];
+        if (bgm.muted) {
+            toggleMute();
+        }
+        bgm.play().catch(e => console.log("Audio play was prevented until user interaction."));
 
-let rotatedShape;
-
-// init board
-for (let row = 0; row < BOARD_HEIGHT; row++) {
-    board[row] = [];
-    for (let col = 0; col < BOARD_WIDTH; col++) {
-        board[row][col] = 0;
+        gameInterval = setInterval(moveTetromino, speed);
+        bootstrapLevelModal.hide();
     }
-}
 
-// Tetrominoes
-const tetrominoes = [
-    // Tetromino-O
-    {
-        shape: [
-            [1, 1],
-            [1, 1],
-        ],
-        color: "#ff9e0b",
-    },
-    // Tetromino-T
-    {
-        shape: [
-            [0, 2, 0],
-            [2, 2, 2],
-        ],
-        color: "#f20b33",
-    },
-    // Tetromino-S
-    {
-        shape: [
-            [0, 3, 3],
-            [3, 3, 0],
-        ],
-        color: "#c01ebb",
-    },
-    // Tetromino-Z
-    {
-        shape: [
-            [4, 4, 0],
-            [0, 4, 4],
-        ],
-        color: "#238f18",
-    },
-    // Tetromino-J
-    {
-        shape: [
-            [5, 0, 0],
-            [5, 5, 5],
-        ],
-        color: "#fe5f09",
-    },
-    // Tetromino-L
-    {
-        shape: [
-            [0, 0, 6],
-            [6, 6, 6],
-        ],
-        color: "#003cbe",
-    },
-    // Tetromino-I
-    {
-        shape: [[7, 7, 7, 7]],
-        color: "#0098df"
-    },
-];
+    levelEasy.addEventListener('click', () => startGame(700, true));
+    levelNormal.addEventListener('click', () => startGame(500));
+    levelHard.addEventListener('click', () => startGame(100));
 
-// Tetromino randomizer
-function randomTetromino() {
-    const index = Math.floor(Math.random() * tetrominoes.length);
-    const tetromino = tetrominoes[index];
-    return {
-        shape: tetromino.shape,
-        color: tetromino.color,
-        row: 0,
-        col: Math.floor(Math.random() * (BOARD_WIDTH - tetromino.shape[0].length + 1)),
-    };
-}
+    reset.addEventListener("click", function () {
+        bootstrapGameOverModal.hide();
+        bootstrapLevelModal.show();
+    });
 
-// Current tetromino
-let currentTetromino = randomTetromino();
-let currentGhostTetromino;
+    //Generación de fondo dinámico
+    let angulo_fondo = Math.random() * 360;
+    let tono_fondo = Math.random() * 360;
+    setInterval(() => {
+        document.body.style.background = `linear-gradient(
+                    ${angulo_fondo}deg, 
+                    hsl(${tono_fondo},100%,50%),
+                    hsl(${tono_fondo},100%,20%)
+                )`
+        angulo_fondo += Math.random();
+        tono_fondo += Math.random();
+    }, 100);
 
-// Draw tetromino
-function drawTetromino() {
-    const shape = currentTetromino.shape;
-    const color = currentTetromino.color;
-    const row = currentTetromino.row;
-    const col = currentTetromino.col;
+    // Game board setup
+    const BOARD_WIDTH = 10;
+    const BOARD_HEIGHT = 20;
+    const board = [];
 
-    for (let r = 0; r < shape.length; r++) {
-        for (let c = 0; c < shape[r].length; c++) {
-            if (shape[r][c]) {
-                const block = document.createElement("div");
-                block.classList.add("block");
-                block.style.backgroundColor = color;
-                block.style.top = (row + r) * 24 + "px";
-                block.style.left = (col + c) * 24 + "px";
-                block.setAttribute("id", `block-${row + r}-${col + c}`);
-                document.getElementById("game_board").appendChild(block);
+    let rotatedShape;
+
+    // init board
+    function initializeBoard() {
+        for (let row = 0; row < BOARD_HEIGHT; row++) {
+            board[row] = [];
+            for (let col = 0; col < BOARD_WIDTH; col++) {
+                board[row][col] = 0;
             }
         }
     }
-}
 
-// Erase tetromino from board
-function eraseTetromino() {
-    for (let i = 0; i < currentTetromino.shape.length; i++) {
-        for (let j = 0; j < currentTetromino.shape[i].length; j++) {
-            if (currentTetromino.shape[i][j] !== 0) {
-                let row = currentTetromino.row + i;
-                let col = currentTetromino.col + j;
-                let block = document.getElementById(`block-${row}-${col}`);
+    // Tetrominoes
+    const tetrominoes = [
+        { shape: [[1, 1], [1, 1]], color: "#ff9e0b" },
+        { shape: [[0, 2, 0], [2, 2, 2]], color: "#f20b33" },
+        { shape: [[0, 3, 3], [3, 3, 0]], color: "#c01ebb" },
+        { shape: [[4, 4, 0], [0, 4, 4]], color: "#238f18" },
+        { shape: [[5, 0, 0], [5, 5, 5]], color: "#fe5f09" },
+        { shape: [[0, 0, 6], [6, 6, 6]], color: "#003cbe" },
+        { shape: [[7, 7, 7, 7]], color: "#0098df" },
+    ];
 
-                if (block) {
-                    document.getElementById("game_board").removeChild(block);
+    // Tetromino randomizer
+    function randomTetromino() {
+        const index = Math.floor(Math.random() * tetrominoes.length);
+        const tetromino = tetrominoes[index];
+        return {
+            shape: tetromino.shape,
+            color: tetromino.color,
+            row: 0,
+            col: Math.floor(Math.random() * (BOARD_WIDTH - tetromino.shape[0].length + 1)),
+        };
+    }
+
+    let currentTetromino = randomTetromino();
+    let currentGhostTetromino;
+
+    function drawTetromino() {
+        const { shape, color, row, col } = currentTetromino;
+        for (let r = 0; r < shape.length; r++) {
+            for (let c = 0; c < shape[r].length; c++) {
+                if (shape[r][c]) {
+                    const block = document.createElement("div");
+                    block.classList.add("block");
+                    block.style.backgroundColor = color;
+                    block.style.top = (row + r) * 24 + "px";
+                    block.style.left = (col + c) * 24 + "px";
+                    block.setAttribute("id", `block-${row + r}-${col + c}`);
+                    document.getElementById("game_board").appendChild(block);
                 }
             }
         }
     }
-}
 
-// Check if tetromino can move in the specified direction
-function canTetrominoMove(rowOffset, colOffset) {
-    for (let i = 0; i < currentTetromino.shape.length; i++) {
-        for (let j = 0; j < currentTetromino.shape[i].length; j++) {
-            if (currentTetromino.shape[i][j] !== 0) {
-                let row = currentTetromino.row + i + rowOffset;
-                let col = currentTetromino.col + j + colOffset;
-
-                if (row >= BOARD_HEIGHT || col < 0 || col >= BOARD_WIDTH || (row >= 0 && board[row][col] !== 0)) {
-                    return false;
-                }
-            }
-        }
-    }
-    return true;
-}
-
-// Check if tetromino can move in the specified direction
-function canTetrominoRotate() {
-    for (let i = 0; i < rotatedShape.length; i++) {
-        for (let j = 0; j < rotatedShape[i].length; j++) {
-            if (rotatedShape[i][j] !== 0) {
-                let row = currentTetromino.row + i;
-                let col = currentTetromino.col + j;
-
-                if (row >= BOARD_HEIGHT || col < 0 || col >= BOARD_WIDTH || (row >= 0 && board[row][col] !== 0)) {
-                    return false;
-                }
-            }
-        }
-    }
-    return true;
-}
-
-// Lock the tetromino in place
-function lockTetromino() {
-    if (!gameOver) {
-        console.log(gameOver);
-        // Add the tetromino to the board
+    function eraseTetromino() {
         for (let i = 0; i < currentTetromino.shape.length; i++) {
             for (let j = 0; j < currentTetromino.shape[i].length; j++) {
                 if (currentTetromino.shape[i][j] !== 0) {
                     let row = currentTetromino.row + i;
                     let col = currentTetromino.col + j;
+                    let block = document.getElementById(`block-${row}-${col}`);
+                    if (block) {
+                        block.parentElement.removeChild(block);
+                    }
+                }
+            }
+        }
+    }
+
+    function canTetrominoMove(rowOffset, colOffset, shape = currentTetromino.shape) {
+        for (let i = 0; i < shape.length; i++) {
+            for (let j = 0; j < shape[i].length; j++) {
+                if (shape[i][j] !== 0) {
+                    let row = currentTetromino.row + i + rowOffset;
+                    let col = currentTetromino.col + j + colOffset;
+                    if (row >= BOARD_HEIGHT || col < 0 || col >= BOARD_WIDTH || (row >= 0 && board[row][col] !== 0)) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    function canTetrominoRotate() {
+        for (let i = 0; i < rotatedShape.length; i++) {
+            for (let j = 0; j < rotatedShape[i].length; j++) {
+                if (rotatedShape[i][j] !== 0) {
+                    let row = currentTetromino.row + i;
+                    let col = currentTetromino.col + j;
+                    if (row >= BOARD_HEIGHT || col < 0 || col >= BOARD_WIDTH || (row >= 0 && board[row][col] !== 0)) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    function lockTetromino() {
+        if (gameOver) return;
+
+        for (let i = 0; i < currentTetromino.shape.length; i++) {
+            for (let j = 0; j < currentTetromino.shape[i].length; j++) {
+                if (currentTetromino.shape[i][j] !== 0) {
+                    let row = currentTetromino.row + i;
+                    let col = currentTetromino.col + j;
+                    if (row < 0) {
+                        handleGameOver();
+                        return;
+                    }
                     board[row][col] = currentTetromino.color;
                 }
             }
         }
 
-        // Check if any rows need to be cleared
         let rowsCleared = clearRows();
         if (rowsCleared > 0) {
             score += 10 * rowsCleared;
             document.getElementById("score").innerText = "Score: " + score;
-
-            // Incrementar nivel cada 100 puntos
             if (score % 50 === 0) {
                 level++;
                 document.getElementById("level").innerText = "Level: " + level;
-                // speed /= score*10;
-                // console.log(speed, level);
-                // clearInterval(interval);
-                // setInterval(moveTetromino, speed)
             }
         }
 
-        // Verificar si hay vidas disponibles
-        if (lives > 0) {
-            // Create a new tetromino
-            currentTetromino = randomTetromino();
-        } else {
-            // Acciones para Game Over
-            bgm.muted = true;
-            breakSound.muted = true;
-            drop.muted = true;
-            lose.muted = true;
-            sound.muted = true;
-            modalGameOver.showModal();
-            lose.play();
-            lose.muted = false;
-            gameOver = true;
-            console.log(gameOver);
-            return;
+        currentTetromino = randomTetromino();
+        if (!canTetrominoMove(0, 0)) {
+            handleGameOver();
         }
     }
-}
+    
+    function handleGameOver() {
+        gameOver = true;
+        clearInterval(gameInterval);
+        bgm.pause();
+        lose.play();
+        bootstrapGameOverModal.show();
+    }
 
-function clearRows() {
-    let rowsCleared = 0;
-
-    // "Elimina la línea completa al examinarla desde abajo."
-    for (let y = BOARD_HEIGHT - 1; y >= 0; y--) {
-        let rowFilled = true;
-
-        for (let x = 0; x < BOARD_WIDTH; x++) {
-            if (board[y][x] === 0) {
-                rowFilled = false;
-                break;
+    function clearRows() {
+        let rowsCleared = 0;
+        for (let y = BOARD_HEIGHT - 1; y >= 0; y--) {
+            if (board[y].every(value => value !== 0)) {
+                rowsCleared++;
+                breakSound.play();
+                for (let yy = y; yy > 0; yy--) {
+                    board[yy] = board[yy - 1];
+                }
+                board[0] = Array(BOARD_WIDTH).fill(0);
+                y++; // Re-check the current row
             }
         }
-
-        if (rowFilled) {
-            breakSound.muted = false;
-            breakSound.play();
-            rowsCleared++;
-
-            for (let yy = y; yy > 0; yy--) {
-                for (let x = 0; x < BOARD_WIDTH; x++) {
-                    board[yy][x] = board[yy - 1][x];
+        if (rowsCleared > 0) {
+            redrawBoard();
+        }
+        return rowsCleared;
+    }
+    
+    function redrawBoard() {
+        const gameBoard = document.getElementById("game_board");
+        gameBoard.innerHTML = "";
+        for (let row = 0; row < BOARD_HEIGHT; row++) {
+            for (let col = 0; col < BOARD_WIDTH; col++) {
+                if (board[row][col]) {
+                    const block = document.createElement("div");
+                    block.classList.add("block");
+                    block.style.backgroundColor = board[row][col];
+                    block.style.top = row * 24 + "px";
+                    block.style.left = col * 24 + "px";
+                    gameBoard.appendChild(block);
                 }
             }
+        }
+    }
 
-            for (let x = 0; x < BOARD_WIDTH; x++) {
-                board[0][x] = 0;
+    function rotateTetromino() {
+        if (gameOver) return;
+        rotatedShape = [];
+        const shape = currentTetromino.shape;
+        for (let i = 0; i < shape[0].length; i++) {
+            let row = [];
+            for (let j = shape.length - 1; j >= 0; j--) {
+                row.push(shape[j][i]);
             }
-            document.getElementById("game_board").innerHTML = "";
-            for (let row = 0; row < BOARD_HEIGHT; row++) {
-                for (let col = 0; col < BOARD_WIDTH; col++) {
-                    if (board[row][col]) {
-                        const block = document.createElement("div");
-                        block.classList.add("block");
-                        block.style.backgroundColor = board[row][col];
-                        block.style.top = row * 24 + "px";
-                        block.style.left = col * 24 + "px";
-                        block.setAttribute("id", `block-${row}-${col}`);
-                        document.getElementById("game_board").appendChild(block);
+            rotatedShape.push(row);
+        }
+
+        if (canTetrominoRotate()) {
+            drop.play();
+            eraseTetromino();
+            currentTetromino.shape = rotatedShape;
+            drawTetromino();
+            moveGhostTetromino();
+        }
+    }
+
+    function moveTetromino(direction) {
+        if (gameOver) return;
+        let row = currentTetromino.row;
+        let col = currentTetromino.col;
+        eraseTetromino();
+
+        if (direction === "left" && canTetrominoMove(0, -1)) {
+            currentTetromino.col -= 1;
+        } else if (direction === "right" && canTetrominoMove(0, 1)) {
+            currentTetromino.col += 1;
+        } else if (direction === "down") {
+            if (canTetrominoMove(1, 0)) {
+                currentTetromino.row += 1;
+            } else {
+                drawTetromino(); // Redraw at old position before locking
+                lockTetromino();
+            }
+        }
+        
+        drawTetromino();
+        if (direction !== "down") {
+             moveGhostTetromino();
+        }
+    }
+    
+    function gameLoop() {
+        if (!gameOver) {
+            moveTetromino('down');
+        }
+    }
+
+    function handleKeyPress(event) {
+        if (gameOver) return;
+        switch (event.keyCode) {
+            case 37: moveTetromino("left"); break;
+            case 39: moveTetromino("right"); break;
+            case 40: moveTetromino("down"); break;
+            case 38: rotateTetromino(); break;
+            case 32: dropTetromino(); break;
+        }
+    }
+
+    document.addEventListener("keydown", handleKeyPress);
+
+    function dropTetromino() {
+        if (gameOver) return;
+        drop.play();
+        eraseTetromino();
+        while (canTetrominoMove(1, 0)) {
+            currentTetromino.row++;
+        }
+        drawTetromino();
+        lockTetromino();
+    }
+
+    function drawGhostTetromino() {
+        const ghost = document.querySelector(".ghost");
+        if(ghost) ghost.parentElement.removeChild(ghost);
+        
+        const shape = currentGhostTetromino.shape;
+        const color = "rgba(255,255,255,0.05)";
+        const row = currentGhostTetromino.row;
+        const col = currentGhostTetromino.col;
+
+        const ghostContainer = document.createElement('div');
+        ghostContainer.classList.add('ghost');
+        
+        for (let r = 0; r < shape.length; r++) {
+            for (let c = 0; c < shape[r].length; c++) {
+                if (shape[r][c]) {
+                    const block = document.createElement("div");
+                    block.style.backgroundColor = color;
+                    block.style.top = (row + r) * 24 + "px";
+                    block.style.left = (col + c) * 24 + "px";
+                    block.style.position = 'absolute';
+                    block.style.width = '24px';
+                    block.style.height = '24px';
+                    ghostContainer.appendChild(block);
+                }
+            }
+        }
+        document.getElementById("game_board").appendChild(ghostContainer);
+    }
+
+    function eraseGhostTetromino() {
+        const ghost = document.querySelector(".ghost");
+        if (ghost) {
+            ghost.remove();
+        }
+    }
+
+    function canGhostTetrominoMove(rowOffset, colOffset) {
+        for (let i = 0; i < currentGhostTetromino.shape.length; i++) {
+            for (let j = 0; j < currentGhostTetromino.shape[i].length; j++) {
+                if (currentGhostTetromino.shape[i][j] !== 0) {
+                    let row = currentGhostTetromino.row + i + rowOffset;
+                    let col = currentGhostTetromino.col + j + colOffset;
+                    if (row >= BOARD_HEIGHT || col < 0 || col >= BOARD_WIDTH || (row >= 0 && board[row][col] !== 0)) {
+                        return false;
                     }
                 }
             }
-
-            y++;
         }
+        return true;
     }
 
-    return rowsCleared;
-}
-
-// Rotate the tetromino
-function rotateTetromino() {
-    rotatedShape = [];
-    for (let i = 0; i < currentTetromino.shape[0].length; i++) {
-        let row = [];
-        for (let j = currentTetromino.shape.length - 1; j >= 0; j--) {
-            row.push(currentTetromino.shape[j][i]);
-        }
-        rotatedShape.push(row);
-    }
-
-    // Check if the rotated tetromino can be placed
-    if (canTetrominoRotate()) {
-        drop.muted = false;
-        drop.play();
-        eraseTetromino();
-        currentTetromino.shape = rotatedShape;
-        drawTetromino();
-    }
-
-    moveGhostTetromino();
-}
-
-// Move the tetromino
-function moveTetromino(direction) {
-
-    let row = currentTetromino.row;
-    let col = currentTetromino.col;
-    if (direction === "left") {
-        if (canTetrominoMove(0, -1)) {
-            eraseTetromino();
-            col -= 1;
-            currentTetromino.col = col;
-            currentTetromino.row = row;
-            drawTetromino();
-        }
-    } else if (direction === "right") {
-        if (canTetrominoMove(0, 1)) {
-            eraseTetromino();
-            col += 1;
-
-            currentTetromino.col = col;
-            currentTetromino.row = row;
-            drawTetromino();
-        }
-    } else {
-        if (canTetrominoMove(1, 0)) {
-            eraseTetromino();
-            row++;
-            currentTetromino.col = col;
-            currentTetromino.row = row;
-            drawTetromino();
-        } else {
-            lockTetromino();
-        }
-    }
-
-    moveGhostTetromino();
-}
-
-drawTetromino();
-document.addEventListener("keydown", handleKeyPress);
-
-function handleKeyPress(event) {
-    switch (event.keyCode) {
-        case 37: // left arrow
-            moveTetromino("left");
-            break;
-        case 39: // right arrow
-            moveTetromino("right");
-            break;
-        case 40: // down arrow
-            moveTetromino("down");
-            break;
-        case 38: // up arrow
-            rotateTetromino();
-            break;
-        case 32: // up arrow
-            dropTetromino();
-            break;
-        default:
-            break;
-    }
-}
-
-function dropTetromino() {
-    let row = currentTetromino.row;
-    let col = currentTetromino.col;
-
-    drop.muted = false;
-    drop.play();
-
-    while (canTetrominoMove(1, 0)) {
-        eraseTetromino();
-        row++;
-        currentTetromino.col = col;
-        currentTetromino.row = row;
-        drawTetromino();
-    }
-    lockTetromino();
-}
-
-// Draw Ghost tetromino
-function drawGhostTetromino() {
-    const shape = currentGhostTetromino.shape;
-    const color = "rgba(255,255,255,0.05)";
-    const row = currentGhostTetromino.row;
-    const col = currentGhostTetromino.col;
-
-    for (let r = 0; r < shape.length; r++) {
-        for (let c = 0; c < shape[r].length; c++) {
-            if (shape[r][c]) {
-                const block = document.createElement("div");
-                block.classList.add("ghost");
-                block.style.backgroundColor = color;
-                block.style.top = (row + r) * 24 + "px";
-                block.style.left = (col + c) * 24 + "px";
-                block.setAttribute("id", `ghost-${row + r}-${col + c}`);
-                document.getElementById("game_board").appendChild(block);
+    function moveGhostTetromino() {
+        if (isEasyMode) {
+            eraseGhostTetromino();
+            currentGhostTetromino = { ...currentTetromino };
+            while (canGhostTetrominoMove(1, 0)) {
+                currentGhostTetromino.row++;
             }
+            drawGhostTetromino();
         }
     }
-}
 
-function eraseGhostTetromino() {
-    const ghost = document.querySelectorAll(".ghost");
-    for (let i = 0; i < ghost.length; i++) {
-        ghost[i].remove();
+    function restartGame() {
+        gameOver = false;
+        lives = 3;
+        score = 0;
+        level = 1;
+        initializeBoard();
+        redrawBoard();
+        document.getElementById("score").innerText = "Score: " + score;
+        document.getElementById("level").innerText = "Level: " + level;
+        currentTetromino = randomTetromino();
     }
-}
-
-// Check if tetromino can move in the specified direction
-function canGhostTetrominoMove(rowOffset, colOffset) {
-    for (let i = 0; i < currentGhostTetromino.shape.length; i++) {
-        for (let j = 0; j < currentGhostTetromino.shape[i].length; j++) {
-            if (currentGhostTetromino.shape[i][j] !== 0) {
-                let row = currentGhostTetromino.row + i + rowOffset;
-                let col = currentGhostTetromino.col + j + colOffset;
-
-                if (row >= BOARD_HEIGHT || col < 0 || col >= BOARD_WIDTH || (row >= 0 && board[row][col] !== 0)) {
-                    return false;
-                }
-            }
-        }
-    }
-    return true;
-}
-
-function moveGhostTetromino() {
-    if (isEasyMode) {
-        eraseGhostTetromino();
-
-        currentGhostTetromino = { ...currentTetromino };
-        while (canGhostTetrominoMove(1, 0)) {
-            currentGhostTetromino.row++;
-        }
-
-        drawGhostTetromino();
-    }
-}
-
-function isGameOver() {
-    for (let i = 0; i < currentTetromino.shape.length; i++) {
-        for (let j = 0; j < currentTetromino.shape[i].length; j++) {
-            if (currentTetromino.shape[i][j] !== 0) {
-                let row = currentTetromino.row + i;
-                if (row <= 0) {
-                    return true; // Game Over
-                }
-            }
-        }
-    }
-    return false; // No Game Over
-}
-
-function restartGame() {
-    lives = 3;
-    score = 0;
-    level = 1;
-    isEasyMode = false;
-    gameOver = false;
-
-    document.getElementById("score").innerText = "Score: " + score;
-    document.getElementById("level").innerText = "Level: " + level;
-}
+    
+    // Initial setup
+    initializeBoard();
+    bootstrapLevelModal.show();
+});

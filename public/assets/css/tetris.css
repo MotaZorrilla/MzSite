@@ -8,6 +8,7 @@
     color: rgb(4, 128, 0);
     font-size: xx-large;
     margin-bottom: 0px;
+    z-index: 1000; /* Ensure header is above other content */
 }
 
 .content {
@@ -36,20 +37,6 @@
     flex-shrink: 0;
 }
 
-/*
-
-
-#reset {
-    margin: auto;
-    padding: 1rem;
-    border-radius: 10px;
-    color: white;
-    background-color: purple;
-    display: block;
-    font-weight: bold;
-    cursor: pointer;
-}
-*/
 .footer {
     position: fixed;
     bottom: 0;
@@ -76,9 +63,9 @@ body {
     align-items: center;
     margin: 0;
     padding: 0;
+    font-family: 'Press Start 2P', cursive; /* Arcade-style font */
 }
 
-/* Añade esta regla CSS para centrar el logo de Tetris */
 .game_board_wrap {
     display: flex;
     flex-direction: column;
@@ -117,115 +104,98 @@ body {
     box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.2);
 }
 
-.Levels {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    /* Centra los elementos horizontalmente */
-    justify-content: center;
-    /* Centra los elementos verticalmente */
-    gap: 25px;
-    margin-top: 30px;
-}
-
 #game_info {
     border: 5px solid #3e5eba;
-    width: 220px;
-    height: 460px;
+    width: 280px; /* Increased width for better spacing */
+    min-height: 460px; /* Use min-height instead of fixed height */
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    background-color: #ffffff;
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    color: #333333;
+    justify-content: flex-start; /* Align content to the top */
+    background-color: #1a1a2e;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    color: #e0e0e0;
 }
 
-#score,
-#level,
-#lives {
-    margin-bottom: 10px;
-    font-size: 18px;
+#score, #level, #lives {
+    margin-bottom: 15px;
+    font-size: 20px;
     font-weight: bold;
+    text-shadow: 2px 2px 4px #000;
 }
 
-#score {
-    color: #4CAF50;
-    /* Color verde */
-}
+#score { color: #00ff00; }
+#level { color: #ff9900; }
+#lives { color: #ff0000; }
 
-#level {
-    color: #2196F3;
-    /* Color azul */
-}
-
-#lives {
-    color: #ff0000;
-}
-
-/* Quita los bordes de los botones de los niveles */
-#buttonEasy,
-#buttonNormal,
-#buttonHard {
+#buttonEasy, #buttonNormal, #buttonHard {
     border: none;
     cursor: pointer;
+    transition: transform 0.3s ease;
 }
 
-/* Agrega un efecto de campana suave al hacer hover en los botones de los niveles */
-#buttonEasy:hover,
-#buttonNormal:hover,
-#buttonHard:hover {
-    transform: scale(1);
-    /* Restaura la escala original */
-    animation: rotateInfinite 0.8s infinite ease-in-out;
-    /* Agrega la animación en bucle */
-    transition: transform 0.3s ease, background-color 0.3s ease;
-    /*Agrega una transición suave */
-}
-
-@keyframes rotateInfinite {
-    0% {
-        transform: scale(1) rotateZ(5deg);
-    }
-
-    20% {
-        transform: scale(1) rotateZ(-4deg);
-    }
-
-    40% {
-        transform: scale(1) rotateZ(3deg);
-    }
-
-    50% {
-        transform: scale(1) rotateZ(-2deg);
-    }
-
-    60% {
-        transform: scale(1) rotateZ(0deg);
-    }
-
-    100% {
-        transform: scale(1) rotateZ(0deg);
-    }
+#buttonEasy:hover, #buttonNormal:hover, #buttonHard:hover {
+    transform: scale(1.1);
 }
 
 h2 {
-    color: #333;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-bottom: 2px solid #3e5eba;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+    text-shadow: 3px 3px 5px #000;
 }
 
-#top-scores,
-#recent-scores,
-#difficulty-levels {
+#top-scores, #recent-scores {
+    width: 100%;
     margin-top: 10px;
 }
 
 .score-item {
     display: flex;
     justify-content: space-between;
-    margin: 5px 0;
-    padding: 5px;
-    border-bottom: 1px solid #ccc;
+    margin: 8px 0;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #2a2a3e;
+    transition: transform 0.2s, box-shadow 0.2s;
+    font-size: 16px;
+}
+
+.score-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.score-item span:first-child {
+    font-weight: bold;
+}
+
+.score-gold {
+    background: linear-gradient(45deg, #ffd700, #f0c700);
+    color: #332a00;
+}
+
+.score-silver {
+    background: linear-gradient(45deg, #c0c0c0, #b0b0b0);
+    color: #2c2c2c;
+}
+
+.score-bronze {
+    background: linear-gradient(45deg, #cd7f32, #b87329);
+    color: #4d2f0f;
+}
+
+.score-gold .bi-trophy-fill { color: #ffc107; }
+.score-silver .bi-trophy-fill { color: #a8a8a8; }
+.score-bronze .bi-trophy-fill { color: #a06835; }
+
+.bi-trophy-fill {
+    margin-right: 10px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
 
