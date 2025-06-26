@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         bgm.play().catch(e => console.log("Audio play was prevented until user interaction."));
 
-        gameInterval = setInterval(moveTetromino, speed);
+        gameInterval = setInterval(gameLoop, speed);
         bootstrapLevelModal.hide();
     }
 

@@ -155,7 +155,9 @@
         <div class="game_board_wrap">
             <img class="logo" src="assets/images/tetris.png" alt="" width="250" />
             <div class="game_container">
-                <div id="game_board"></div>
+                <div class="game-board-container">
+                    <div id="game_board"></div>
+                </div>
                 <div id="game_info">
                     <div style="display: flex; gap: 10px">
                         <div id="score">Score: 0</div>
