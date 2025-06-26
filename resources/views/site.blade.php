@@ -834,24 +834,18 @@
 
                 <div class="section-title">
                     <h2>Video Games</h2>
-                    <p>✨I dedicate part of my free time to developing video games as a hobby.
-                        This section arises as a tribute to video games, which have been major drivers of the
-                        technological development we experience today. </p>
+                    <p>I enjoy developing video games in my spare time. This section showcases some of them. <br><strong>Click any game below to play it in your browser!</strong></p>
                 </div>
 
                 <div class="testimonials-slider swiper" data-aos="fade-up" data-aos-delay="100">
                     <div class="swiper-wrapper">
-                        <!-- Primer juego (Tetris) -->
+                        <!-- Game 1 (Tetris) -->
                         <div class="swiper-slide">
                             <div class="testimonial-item" data-aos="fade-up" data-aos-delay="100">
                                 <a href="/tetris" target="blank">
                                     <p>
                                         <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                                        🕹️ The addictive experience of the classic Tetris, reinvented with a modern
-                                        twist.
-                                        Combine skill and strategy to fit the pieces into the right place and complete
-                                        lines,
-                                        challenging your limits in this timeless puzzle game.
+                                        <strong>Play Now!</strong> The timeless classic, reinvented. Test your skills in this addictive puzzle game.
                                         <i class="bx bxs-quote-alt-right quote-icon-right"></i>
                                     </p>
                                     <img src="{{ asset('img/tetris.png') }}" class="testimonial-icon" alt=""
@@ -860,18 +854,15 @@
                                     <h4>2D</h4>
                                 </a>
                             </div>
-                        </div><!-- Fin del primer juego -->
+                        </div><!-- End Game 1 -->
 
-                        <!-- Segundo juego (Laberinto 3D) -->
+                        <!-- Game 2 (Dash) -->
                         <div class="swiper-slide">
                             <div class="testimonial-item" data-aos="fade-up" data-aos-delay="200">
                                 <a href="/dash" target="blank">
                                     <p>
                                         <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                                        🏎️ Take the wheel and experience the thrill of high-speed racing! <br>
-                                        Put your
-                                        reflexes to the test as you navigate challenging courses and compete for the top
-                                        spot.🏁
+                                        <strong>Step on it!</strong> Experience the thrill of high-speed racing and test your reflexes.
                                         <i class="bx bxs-quote-alt-right quote-icon-right"></i>
                                     </p>
                                     <img src="{{ asset('img/dash.png') }}" class="testimonial-icon"
@@ -880,27 +871,24 @@
                                     <h4>2D->3D</h4>
                                 </a>
                             </div>
-                        </div><!-- Fin del segundo juego -->
+                        </div><!-- End Game 2 -->
 
-                        <!-- tercer juego (Laberinto 3D) -->
+                        <!-- Game 3 (Labyrinth) -->
                         <div class="swiper-slide">
                             <div class="testimonial-item" data-aos="fade-up" data-aos-delay="300">
                                 <a href="/ray" target="blank">
                                     <p>
                                         <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                                        ⚡ Explore a three-dimensional maze full of mysteries and challenges.
-                                        Navigate through intricate passageways and search for the exit while facing
-                                        obstacles
-                                        and puzzles in this third-dimensional adventure game.
+                                        <strong>Can you escape?</strong> Explore a 3D maze full of mysteries and challenges.
                                         <i class="bx bxs-quote-alt-right quote-icon-right"></i>
                                     </p>
                                     <img src="{{ asset('img/labyrinth.png') }}" class="testimonial-icon"
                                         alt="" style="width: auto; height: 100px;">
-                                    <h3>labyrinth</h3>
+                                    <h3>Labyrinth</h3>
                                     <h4>3D</h4>
                                 </a>
                             </div>
-                        </div><!-- Fin del tercer juego -->
+                        </div><!-- End Game 3 -->
                     </div>
                     <div class="swiper-pagination"></div>
                 </div>
