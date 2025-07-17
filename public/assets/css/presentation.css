@@ -1,0 +1,603 @@
+/* --- Plantilla "Fintech Blue" mejorada --- */
+/* Define variables CSS para colores y fuentes, facilitando la consistencia y el cambio de tema. */
+        :root {
+            --main-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fuente principal */
+            --heading-font: 'Montserrat', 'Helvetica Neue', sans-serif; /* Fuente para encabezados */
+            --background-color: #f0f4f8; /* Color de fondo general */
+            --main-color: #333; /* Color de texto principal */
+            --heading-color: #0d47a1; /* Color para encabezados */
+            --primary-color: #1976d2; /* Color primario para elementos interactivos */
+            --secondary-color: #2196f3; /* Azul secundario más oscuro para mejor contraste */
+            --accent-color: #ff6f00; /* Color de acento */
+            --success-color: #4caf50; /* Color para mensajes de éxito */
+            --danger-color: #d32f2f; /* Rojo más oscuro para mejor contraste */
+        }
+
+/* Clase para ocultar visualmente elementos, pero mantenerlos accesibles para lectores de pantalla */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Importa la fuente 'Montserrat' de Google Fonts con pesos 500 y 700. */
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap');
+
+/* Estilos generales para el contenedor principal de Reveal.js */
+        .reveal {
+            font-family: var(--main-font); /* Aplica la fuente principal definida en las variables */
+            color: var(--main-color); /* Aplica el color de texto principal */
+        }
+
+/* Estilos para todos los niveles de encabezados dentro de Reveal.js */
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+            font-family: var(--heading-font); /* Aplica la fuente de encabezados */
+            color: var(--heading-color); /* Aplica el color de encabezados */
+            font-weight: 700; /* Grosor de la fuente en negrita */
+            margin-bottom: 1rem; /* Margen inferior */
+        }
+
+/* Estilos específicos para el encabezado de nivel 1 */
+        .reveal h1 {
+            text-transform: uppercase; /* Transforma el texto a mayúsculas */
+            font-size: 2.8rem; /* Tamaño de fuente grande */
+        }
+
+/* Estilos específicos para el encabezado de nivel 2 */
+        .reveal h2 {
+            border-bottom: 3px solid var(--primary-color); /* Borde inferior con color primario */
+            padding-bottom: 10px; /* Relleno inferior */
+            display: inline-block; /* Permite aplicar padding y width, y que el borde se ajuste al contenido */
+        }
+
+/* Estilos para cada sección (diapositiva) de Reveal.js */
+        .reveal section:not(.cover-slide) {
+            background: var(--background-color); /* Fondo de la diapositiva */
+        }
+        
+/* Estilos para enlaces */
+        .reveal a {
+            color: var(--primary-color); /* Color del enlace */
+            text-decoration: none; /* Sin subrayado por defecto */
+        }
+
+/* Estilos para enlaces al pasar el ratón por encima */
+        .reveal a:hover {
+            text-decoration: underline; /* Subrayado al pasar el ratón */
+        }
+
+        /* --- Estilos específicos de la Plantilla --- */
+/* Color de las flechas de navegación de Reveal.js */
+        .reveal .controls-arrow {
+            color: var(--primary-color); /* Color primario */
+        }
+        
+/* Estilos para la barra de progreso de Reveal.js */
+        .reveal .progress {
+            background: rgba(0, 0, 0, 0.2); /* Fondo semitransparente */
+            color: var(--primary-color); /* Color de la barra de progreso */
+        }
+        
+/* Estilos para el número de diapositiva */
+        .reveal .slide-number {
+            background: rgba(0, 0, 0, 0.2); /* Fondo semitransparente */
+            color: var(--primary-color); /* Color del número */
+            font-size: 1.2rem; /* Tamaño de fuente */
+        }
+
+        /* --- Secciones --- */
+/* Estilos para la cabecera de las secciones */
+        .section-header {
+            background: linear-gradient(135deg, var(--heading-color), var(--primary-color)); /* Fondo degradado */
+            color: white; /* Color de texto blanco */
+            padding: 20px; /* Relleno */
+            border-radius: 15px; /* Bordes redondeados */
+            margin-bottom: 30px; /* Margen inferior */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* Sombra */
+        }
+        
+/* Estilos para sub-cabeceras de secciones */
+        .section-subheader {
+            background: rgba(25, 118, 210, 0.1); /* Fondo semitransparente */
+            padding: 15px; /* Relleno */
+            border-radius: 10px; /* Bordes redondeados */
+            border-left: 5px solid var(--primary-color); /* Borde izquierdo con color primario */
+            margin: 20px 0; /* Margen superior e inferior */
+        }
+
+        /* --- Calculadora 50/30/20 --- */
+/* Estilos para el contenedor de la calculadora */
+        .calculator {
+            background: #ffffff; /* Fondo blanco */
+            border-radius: 15px; /* Bordes redondeados */
+            padding: 25px; /* Relleno */
+            margin: 20px auto; /* Margen y centrado horizontal */
+            width: 90%; /* Ancho del 90% */
+            max-width: 700px; /* Ancho máximo */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* Sombra */
+        }
+        
+/* Estilos para los campos de entrada de número en la calculadora */
+        .calculator input[type="number"] {
+            width: 100%; /* Ancho completo */
+            padding: 12px; /* Relleno */
+            border-radius: 8px; /* Bordes redondeados */
+            border: 1px solid #ccc; /* Borde gris */
+            font-size: 1.2em; /* Tamaño de fuente */
+            text-align: center; /* Texto centrado */
+            color: #333; /* Color de texto */
+            margin-bottom: 20px; /* Margen inferior */
+        }
+        
+/* Estilos para el contenedor de resultados de la calculadora */
+        .calculator .results {
+            display: flex; /* Usa flexbox */
+            justify-content: space-around; /* Distribuye los elementos con espacio alrededor */
+            flex-wrap: wrap; /* Permite que los elementos se envuelvan en varias líneas */
+            gap: 15px; /* Espacio entre elementos */
+        }
+        
+/* Estilos para cada elemento de resultado en la calculadora */
+        .calculator .result-item {
+            background: rgba(25, 118, 210, 0.1); /* Fondo semitransparente */
+            padding: 15px; /* Relleno */
+            border-radius: 10px; /* Bordes redondeados */
+            text-align: center; /* Texto centrado */
+            flex: 1; /* Permite que el elemento crezca y se encoja */
+            min-width: 150px; /* Ancho mínimo */
+        }
+        
+/* Estilos para los títulos de los elementos de resultado */
+        .calculator .result-item h4 {
+            margin: 0; /* Sin margen */
+            color: var(--heading-color); /* Color de encabezado */
+            font-size: 1.1rem; /* Tamaño de fuente */
+        }
+        
+/* Estilos para los valores numéricos de los elementos de resultado */
+        .calculator .result-item span {
+            display: block; /* Ocupa todo el ancho disponible */
+            font-size: 1.5em; /* Tamaño de fuente */
+            font-weight: bold; /* Texto en negrita */
+            color: var(--heading-color); /* Color de encabezado */
+            margin-top: 10px; /* Margen superior */
+        }
+
+        /* --- Gastos Hormiga --- */
+/* Estilos para el contenedor de gastos hormiga */
+        .ant-expenses {
+            display: flex; /* Usa flexbox */
+            justify-content: center; /* Centra los elementos horizontalmente */
+            flex-wrap: wrap; /* Permite que los elementos se envuelvan */
+            gap: 20px; /* Espacio entre elementos */
+            margin: 30px 0; /* Margen superior e inferior */
+        }
+        
+/* Estilos para cada elemento individual de gasto hormiga */
+        .ant-item {
+            background: white; /* Fondo blanco */
+            border-radius: 10px; /* Bordes redondeados */
+            padding: 15px; /* Relleno */
+            width: 150px; /* Ancho fijo */
+            text-align: center; /* Texto centrado */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05); /* Sombra */
+            transition: transform 0.3s; /* Transición suave para el efecto hover */
+        }
+        
+/* Efecto al pasar el ratón por encima de un elemento de gasto hormiga */
+        .ant-item:hover {
+            transform: translateY(-5px); /* Desplaza el elemento ligeramente hacia arriba */
+        }
+        
+/* Estilos para los iconos dentro de los elementos de gasto hormiga */
+        .ant-item i {
+            font-size: 2.5rem; /* Tamaño de fuente grande para los iconos */
+            color: var(--accent-color); /* Color de acento */
+            margin-bottom: 10px; /* Margen inferior */
+        }
+        
+/* Estilos para el texto de los elementos de gasto hormiga */
+        .ant-item p {
+            margin: 0; /* Sin margen */
+            font-weight: bold; /* Texto en negrita */
+        }
+        
+/* Estilos para el total de gastos hormiga */
+        .ant-total {
+            background: var(--danger-color); /* Fondo de color peligro */
+            color: white; /* Color de texto blanco */
+            padding: 20px; /* Relleno */
+            border-radius: 10px; /* Bordes redondeados */
+            margin-top: 30px; /* Margen superior */
+            font-size: 1.4rem; /* Tamaño de fuente */
+            font-weight: bold; /* Texto en negrita */
+        }
+
+        /* --- Anillos de Seguridad --- */
+/* Estilos para el contenedor de los anillos de seguridad */
+        .security-rings {
+            display: flex; /* Usa flexbox */
+            justify-content: center; /* Centra los elementos horizontalmente */
+            flex-wrap: wrap; /* Permite que los elementos se envuelvan */
+            gap: 20px; /* Espacio entre elementos */
+            margin: 30px 0; /* Margen superior e inferior */
+        }
+        
+/* Estilos para cada anillo individual */
+        .ring {
+            background: white; /* Fondo blanco */
+            border-radius: 50%; /* Forma circular */
+            width: 180px; /* Ancho */
+            height: 180px; /* Alto */
+            display: flex; /* Usa flexbox */
+            flex-direction: column; /* Elementos apilados verticalmente */
+            justify-content: center; /* Centra el contenido verticalmente */
+            align-items: center; /* Centra el contenido horizontalmente */
+            text-align: center; /* Texto centrado */
+            padding: 20px; /* Relleno */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Sombra */
+            border: 5px solid; /* Borde sólido */
+            position: relative; /* Posicionamiento relativo para elementos internos */
+        }
+        
+/* Colores de borde específicos para cada anillo */
+        .ring-1 { border-color: var(--success-color); } /* Anillo 1: color de éxito */
+        .ring-2 { border-color: var(--primary-color); } /* Anillo 2: color primario */
+        .ring-3 { border-color: var(--accent-color); } /* Anillo 3: color de acento */
+        .ring-4 { border-color: var(--heading-color); } /* Anillo 4: color de encabezado */
+        
+/* Estilos para los iconos dentro de los anillos */
+        .ring i {
+            font-size: 2.5rem; /* Tamaño de fuente grande */
+            margin-bottom: 10px; /* Margen inferior */
+        }
+        
+/* Estilos para los títulos dentro de los anillos */
+        .ring h4 {
+            margin: 0; /* Sin margen */
+            font-size: 1.1rem; /* Tamaño de fuente */
+        }
+        
+/* Estilos para el texto descriptivo dentro de los anillos */
+        .ring p {
+            margin: 5px 0 0; /* Margen superior */
+            font-size: 0.9rem; /* Tamaño de fuente */
+        }
+
+        /* --- Crypto --- */
+/* Estilos para la sección de criptomonedas */
+        .crypto-section {
+            background: linear-gradient(135deg, #0d1b2a, #1b263b); /* Fondo degradado oscuro */
+            color: white; /* Color de texto blanco */
+            padding: 40px 20px; /* Relleno */
+            border-radius: 15px; /* Bordes redondeados */
+        }
+        
+/* Estilos para la cuadrícula de tarjetas de criptomonedas */
+        .crypto-grid {
+            display: grid; /* Usa cuadrícula CSS */
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Columnas adaptables */
+            gap: 20px; /* Espacio entre elementos de la cuadrícula */
+            margin: 30px 0; /* Margen superior e inferior */
+        }
+        
+/* Estilos para cada tarjeta de criptomoneda */
+        .crypto-card {
+            background: rgba(255, 255, 255, 0.1); /* Fondo blanco semitransparente */
+            border-radius: 15px; /* Bordes redondeados */
+            padding: 20px; /* Relleno */
+            text-align: center; /* Texto centrado */
+            backdrop-filter: blur(10px); /* Efecto de desenfoque en el fondo */
+            border: 1px solid rgba(66, 165, 245, 0.3); /* Borde semitransparente */
+        }
+        
+/* Estilos para los iconos dentro de las tarjetas de criptomonedas */
+        .crypto-card i {
+            font-size: 2.5rem; /* Tamaño de fuente grande */
+            color: var(--secondary-color); /* Color secundario */
+            margin-bottom: 15px; /* Margen inferior */
+        }
+        
+/* Estilos para los títulos dentro de las tarjetas de criptomonedas */
+        .crypto-card h3 {
+            color: white; /* Color de texto blanco */
+            margin: 0 0 10px; /* Margen inferior */
+        }
+        
+/* Estilos para el texto descriptivo dentro de las tarjetas de criptomonedas */
+        .crypto-card p {
+            font-size: 0.9rem; /* Tamaño de fuente */
+            opacity: 0.9; /* Opacidad */
+        }
+        
+/* Estilos para el contenedor de pasos de criptomonedas */
+        .crypto-steps {
+            display: flex; /* Usa flexbox */
+            justify-content: center; /* Centra los elementos horizontalmente */
+            gap: 15px; /* Espacio entre elementos */
+            margin-top: 30px; /* Margen superior */
+            flex-wrap: wrap; /* Permite que los elementos se envuelvan */
+        }
+        
+/* Estilos para cada paso individual de criptomonedas */
+        .step {
+            background: rgba(255, 255, 255, 0.1); /* Fondo blanco semitransparente */
+            border-radius: 10px; /* Bordes redondeados */
+            padding: 15px; /* Relleno */
+            width: 120px; /* Ancho fijo */
+            text-align: center; /* Texto centrado */
+            position: relative; /* Posicionamiento relativo para el pseudo-elemento */
+        }
+        
+/* Estilos para la flecha entre los pasos (pseudo-elemento) */
+        .step:not(:last-child)::after {
+            content: "→"; /* Contenido de la flecha */
+            position: absolute; /* Posicionamiento absoluto */
+            right: -20px; /* Posición a la derecha */
+            top: 50%; /* Centrado vertical */
+            transform: translateY(-50%); /* Ajuste para centrado vertical */
+            color: var(--secondary-color); /* Color secundario */
+            font-size: 1.5rem; /* Tamaño de fuente */
+        }
+        
+/* Estilos para el número de cada paso */
+        .step-number {
+            background: var(--secondary-color); /* Fondo de color secundario */
+            color: white; /* Color de texto blanco */
+            width: 30px; /* Ancho */
+            height: 30px; /* Alto */
+            border-radius: 50%; /* Forma circular */
+            display: flex; /* Usa flexbox */
+            justify-content: center; /* Centra el contenido horizontalmente */
+            align-items: center; /* Centra el contenido verticalmente */
+            margin: 0 auto 10px; /* Margen y centrado horizontal */
+            font-weight: bold; /* Texto en negrita */
+        }
+
+        /* --- Plan de Acción --- */
+/* Estilos para el contenedor del plan de acción */
+        .action-plan {
+            background: white; /* Fondo blanco */
+            border-radius: 15px; /* Bordes redondeados */
+            padding: 30px; /* Relleno */
+            margin: 30px auto; /* Margen y centrado horizontal */
+            max-width: 800px; /* Ancho máximo */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Sombra */
+        }
+        
+/* Estilos para cada elemento del plan de acción */
+        .action-item {
+            display: flex; /* Usa flexbox */
+            align-items: flex-start; /* Alinea los elementos al inicio */
+            margin-bottom: 20px; /* Margen inferior */
+            padding-bottom: 20px; /* Relleno inferior */
+            border-bottom: 1px solid #eee; /* Borde inferior gris claro */
+        }
+        
+/* Elimina el borde inferior del último elemento del plan de acción */
+        .action-item:last-child {
+            border-bottom: none; /* Sin borde inferior */
+            margin-bottom: 0; /* Sin margen inferior */
+            padding-bottom: 0; /* Sin relleno inferior */
+        }
+        
+/* Estilos para el icono de cada elemento del plan de acción */
+        .action-icon {
+            background: var(--primary-color); /* Fondo de color primario */
+            color: white; /* Color de texto blanco */
+            width: 40px; /* Ancho */
+            height: 40px; /* Alto */
+            border-radius: 50%; /* Forma circular */
+            display: flex; /* Usa flexbox */
+            justify-content: center; /* Centra el contenido horizontalmente */
+            align-items: center; /* Centra el contenido verticalmente */
+            margin-right: 15px; /* Margen derecho */
+            flex-shrink: 0; /* Evita que el elemento se encoja */
+        }
+        
+/* Estilos para el título del contenido del plan de acción */
+        .action-content h4 {
+            margin: 0 0 5px; /* Margen inferior */
+            color: var(--heading-color); /* Color de encabezado */
+        }
+        
+/* Estilos para el párrafo del contenido del plan de acción */
+        .action-content p {
+            margin: 0; /* Sin margen */
+        }
+
+        /* --- Footer y CTA --- */
+/* Estilos para el pie de página y la sección de llamada a la acción */
+        .footer-cta, .main-slide {
+            background: linear-gradient(135deg, var(--heading-color), var(--primary-color)); /* Fondo degradado */
+            color: white; /* Color de texto blanco */
+            padding: 40px 20px; /* Relleno */
+            border-radius: 15px; /* Bordes redondeados */
+        }
+        
+/* Estilos para el contenedor de botones de llamada a la acción */
+        .cta-buttons {
+            display: flex; /* Usa flexbox */
+            justify-content: center; /* Centra los elementos horizontalmente */
+            gap: 15px; /* Espacio entre elementos */
+            margin-top: 30px; /* Margen superior */
+            flex-wrap: wrap; /* Permite que los elementos se envuelvan */
+        }
+        
+/* Estilos para los botones de llamada a la acción */
+        .cta-button {
+            background: white; /* Fondo blanco */
+            color: var(--primary-color); /* Color de texto primario */
+            border: none; /* Sin borde */
+            padding: 12px 25px; /* Relleno */
+            border-radius: 50px; /* Bordes muy redondeados (pastilla) */
+            font-weight: bold; /* Texto en negrita */
+            cursor: pointer; /* Cursor de puntero */
+            display: flex; /* Usa flexbox */
+            align-items: center; /* Alinea los elementos verticalmente */
+            gap: 8px; /* Espacio entre el icono y el texto */
+            transition: all 0.3s; /* Transición suave para efectos */
+        }
+        
+/* Efecto al pasar el ratón por encima de los botones de llamada a la acción */
+        .cta-button:hover {
+            background: var(--accent-color); /* Cambia el fondo a color de acento */
+            color: white; /* Cambia el color de texto a blanco */
+            transform: translateY(-3px); /* Desplaza el botón ligeramente hacia arriba */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Sombra */
+        }
+        
+/* Estilos para los enlaces de redes sociales */
+        .social-links {
+            display: flex; /* Usa flexbox */
+            justify-content: center; /* Centra los elementos horizontalmente */
+            gap: 20px; /* Espacio entre elementos */
+            margin-top: 30px; /* Margen superior */
+        }
+        
+/* Estilos para cada enlace individual de red social */
+        .social-link {
+            color: white; /* Color de texto blanco */
+            font-size: 1.8rem; /* Tamaño de fuente grande */
+            transition: transform 0.3s; /* Transición suave para el efecto hover */
+        }
+        
+/* Efecto al pasar el ratón por encima de los enlaces de redes sociales */
+        .social-link:hover {
+            color: var(--accent-color); /* Cambia el color a acento */
+            transform: translateY(-5px); /* Desplaza el icono ligeramente hacia arriba */
+        }
+
+        /* --- Placeholders para imágenes --- */
+/* Estilos generales para marcadores de posición de imágenes */
+        .image-placeholder {
+            background: linear-gradient(45deg, #f0f0f0, #e0e0e0); /* Fondo degradado gris */
+            border: 2px dashed #ccc; /* Borde punteado */
+            border-radius: 10px; /* Bordes redondeados */
+            height: 200px; /* Alto fijo */
+            display: flex; /* Usa flexbox */
+            justify-content: center; /* Centra el contenido horizontalmente */
+            align-items: center; /* Centra el contenido verticalmente */
+            margin: 20px auto; /* Margen y centrado horizontal */
+            color: #999; /* Color de texto gris */
+            font-weight: bold; /* Texto en negrita */
+        }
+        
+/* Estilos para un marcador de posición de imagen pequeño */
+        .small-placeholder {
+            width: 100px; /* Ancho */
+            height: 100px; /* Alto */
+            border-radius: 50%; /* Forma circular */
+        }
+        
+/* Estilos para un marcador de posición de imagen mediano */
+        .medium-placeholder {
+            width: 300px; /* Ancho */
+            height: 200px; /* Alto */
+        }
+        
+/* Estilos para un marcador de posición de imagen grande */
+        .large-placeholder {
+            width: 100%; /* Ancho completo */
+            height: 300px; /* Alto fijo */
+        }
+        
+/* --- Diapositiva de Portada --- */
+.cover-slide {
+    position: relative;
+    height: 100%;
+    padding: 0;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Capa de degradado sobre la imagen */
+.cover-slide::after {
+    content: '';
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, transparent 10%, var(--heading-color) 10%);
+    z-index: 1;
+}
+
+.cover-content {
+    position: relative;
+    
+    height: 100%;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    text-align: right;
+    padding: 4rem;
+    z-index: 2; /* El contenido está por encima del degradado */
+}
+
+.cover-content h1 {
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Sombra para el título */
+}
+
+.cover-content h3 {
+    color: white;
+}
+
+.presenters {
+    margin-top: 3rem;
+}
+
+.presenters p {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.presenters p:first-child {
+    font-weight: bold;
+}
+
+.signature-link {
+    position: absolute;
+    bottom: -5rem;
+    right: 3rem;
+    width: 150px; /* Ajusta el tamaño de la firma */
+}
+
+.signature-link img {
+    width: 100%;
+    height: auto;
+}
+        /* --- Responsive --- */
+/* Media query para pantallas con un ancho máximo de 768px (dispositivos móviles) */
+        @media (max-width: 768px) {
+            /* En la calculadora, los resultados se apilan verticalmente */
+            .calculator .results {
+                flex-direction: column; /* Cambia la dirección de flexbox a columna */
+            }
+            
+            /* Los anillos de seguridad y los pasos de criptomonedas se apilan y centran */
+            .security-rings, .crypto-steps {
+                flex-direction: column; /* Cambia la dirección de flexbox a columna */
+                align-items: center; /* Centra los elementos horizontalmente */
+            }
+            
+            /* Ajusta la flecha entre los pasos para que apunte hacia abajo en pantallas pequeñas */
+            .step:not(:last-child)::after {
+                content: "↓"; /* Cambia el contenido de la flecha a una flecha hacia abajo */
+                right: 50%; /* Posiciona la flecha en el centro horizontal */
+                top: auto; /* Elimina la posición superior */
+                bottom: -25px; /* Posiciona la flecha debajo del elemento */
+                left: 50%; /* Posiciona la flecha en el centro horizontal */
+                transform: translateX(-50%); /* Ajuste para centrado horizontal */
+            }
+        }

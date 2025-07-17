@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>MZ TETRIS </title>
     <meta content="" name="description">
@@ -162,41 +163,27 @@
                     <div style="display: flex; gap: 10px">
                         <div id="score">Score: 0</div>
                         <div id="level">Level: 1</div>
-                        <div id="lives">vidas: 3</div>
+                        <div id="lives">Vidas: 3</div>
                     </div>
                     <h4>Top Scores:</h4>
                     <div id="top-scores">
-                        <div class="score-item score-gold">
-                            <span><i class="bi bi-trophy-fill"></i> Oro</span>
-                            <span>5000 puntos</span>
-                        </div>
-                        <div class="score-item score-silver">
-                            <span><i class="bi bi-trophy-fill"></i> Plata</span>
-                            <span>4500 puntos</span>
-                        </div>
-                        <div class="score-item score-bronze">
-                            <span><i class="bi bi-trophy-fill"></i> Bronce</span>
-                            <span>4000 puntos</span>
-                        </div>
+                        @foreach ($topScores as $index => $score)
+                            <div class="score-item score-{{ $index == 0 ? 'gold' : ($index == 1 ? 'silver' : ($index == 2 ? 'bronze' : '')) }}">
+                                <span><i class="bi bi-trophy-fill"></i> {{ $score->name }}</span>
+                                <span>{{ $score->score }} puntos</span>
+                            </div>
+                        @endforeach
                     </div>
+                    <h4>Recent Scores:</h4>
                     <div id="recent-scores">
-                        <div class="score-item">
-                            <span>4</span>
-                            <span>3000 puntos</span>
-                        </div>
-                        <div class="score-item">
-                            <span>5</span>
-                            <span>2500 puntos</span>
-                        </div>
-                        <!-- Agrega más elementos según sea necesario -->
+                        @foreach ($recentScores as $score)
+                            <div class="score-item">
+                                <span>{{ $score->name }}</span>
+                                <span>{{ $score->score }} puntos</span>
+                            </div>
+                        @endforeach
                     </div>
-                    <h5>Nivel Fácil</h5>
-                    <div id="difficulty-levels">
-                        <div class="level-item">
-                            <span>Primer Nivel</span>
-                            <span>100 puntos</span>
-                        </div>
-                    </div>
+                    
 
                 </div>
             </div>
@@ -212,20 +199,22 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="gameOverModalLabel">Perdiste
-                    </h1>
-                    <button type="button" class="btn btn-danger ms-auto" data-bs-dismiss="modal"
-                        aria-label="Close">X</button>
+                    <h1 class="modal-title fs-5" id="gameOverModalLabel">¡Juego Terminado!</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body ">
-                    <p>
-                        ¿quieres jugar una vez mas?
-                    </p>
+                <div class="modal-body">
+                    <p>Tu puntuación final es: <span id="finalScore"></span></p>
+                    <form id="scoreForm">
+                        <div class="mb-3">
+                            <label for="playerName" class="form-label">Ingresa tu nombre:</label>
+                            <input type="text" class="form-control" id="playerName" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar Puntuación</button>
+                    </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                    <button id="resetButton" type="button" class="btn btn-primary">¡Volver a jugar!</button>
-                  </div>
+                    <button id="resetButton" type="button" class="btn btn-secondary">Jugar de Nuevo</button>
+                </div>
             </div>
         </div>
     </div>

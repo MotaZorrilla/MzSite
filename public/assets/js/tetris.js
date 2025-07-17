@@ -144,6 +144,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
         }
+        moveGhostTetromino(); // Ensure ghost is updated
     }
 
     function eraseTetromino() {
@@ -194,6 +195,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function lockTetromino() {
         if (gameOver) return;
 
+        // Copy piece data into the board grid
         for (let i = 0; i < currentTetromino.shape.length; i++) {
             for (let j = 0; j < currentTetromino.shape[i].length; j++) {
                 if (currentTetromino.shape[i][j] !== 0) {
@@ -208,47 +210,106 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        let rowsCleared = clearRows();
-        if (rowsCleared > 0) {
-            score += 10 * rowsCleared;
+        // Redraw the board to show the locked piece
+        redrawBoard();
+
+        // Find and handle cleared rows
+        const clearedRows = findClearedRows();
+        if (clearedRows.length > 0) {
+            score += 10 * clearedRows.length; // Update score
             document.getElementById("score").innerText = "Score: " + score;
-            if (score % 50 === 0) {
+            if (score > 0 && score % 500 === 0) {
                 level++;
                 document.getElementById("level").innerText = "Level: " + level;
             }
+            animateAndRemoveRows(clearedRows);
         }
 
+        // Spawn a new tetromino
         currentTetromino = randomTetromino();
         if (!canTetrominoMove(0, 0)) {
             handleGameOver();
         }
+        moveGhostTetromino();
     }
     
     function handleGameOver() {
-        gameOver = true;
-        clearInterval(gameInterval);
-        bgm.pause();
-        lose.play();
-        bootstrapGameOverModal.show();
+        lives--;
+        document.getElementById("lives").innerText = "vidas: " + lives;
+
+        if (lives > 0) {
+            // Reset board but keep score and level
+            initializeBoard();
+            redrawBoard();
+            currentTetromino = randomTetromino();
+        } else {
+            // Truly game over
+            gameOver = true;
+            clearInterval(gameInterval);
+            bgm.pause();
+            lose.play();
+            document.getElementById('finalScore').innerText = score;
+            bootstrapGameOverModal.show();
+        }
     }
 
-    function clearRows() {
-        let rowsCleared = 0;
+    document.getElementById('scoreForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const playerName = document.getElementById('playerName').value;
+        const finalScore = score;
+
+        fetch('/tetris/score', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({ name: playerName, score: finalScore })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.message);
+            bootstrapGameOverModal.hide();
+            location.reload(); // Reload the page to show updated scores
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+
+    function findClearedRows() {
+        let rowsToClear = [];
         for (let y = BOARD_HEIGHT - 1; y >= 0; y--) {
             if (board[y].every(value => value !== 0)) {
-                rowsCleared++;
-                breakSound.play();
-                for (let yy = y; yy > 0; yy--) {
-                    board[yy] = board[yy - 1];
-                }
-                board[0] = Array(BOARD_WIDTH).fill(0);
-                y++; // Re-check the current row
+                rowsToClear.push(y);
             }
         }
-        if (rowsCleared > 0) {
+        return rowsToClear;
+    }
+
+    function animateAndRemoveRows(rowsToClear) {
+        breakSound.play();
+        rowsToClear.forEach(y => {
+            for (let x = 0; x < BOARD_WIDTH; x++) {
+                const block = document.getElementById(`board-block-${y}-${x}`);
+                if (block) {
+                    block.classList.add("line-clear-animation");
+                }
+            }
+        });
+
+        // Wait for animation to finish
+        setTimeout(() => {
+            // Remove rows from bottom to top to avoid index issues
+            rowsToClear.sort((a, b) => b - a).forEach(y => {
+                board.splice(y, 1);
+            });
+            // Add new empty rows at the top
+            for (let i = 0; i < rowsToClear.length; i++) {
+                board.unshift(Array(BOARD_WIDTH).fill(0));
+            }
             redrawBoard();
-        }
-        return rowsCleared;
+        }, 500); // Duration of the animation
     }
     
     function redrawBoard() {
@@ -262,6 +323,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     block.style.backgroundColor = board[row][col];
                     block.style.top = row * 24 + "px";
                     block.style.left = col * 24 + "px";
+                    block.setAttribute("id", `board-block-${row}-${col}`);
                     gameBoard.appendChild(block);
                 }
             }
@@ -305,6 +367,7 @@ document.addEventListener('DOMContentLoaded', function () {
             } else {
                 drawTetromino(); // Redraw at old position before locking
                 lockTetromino();
+                return; // Exit to avoid double draw
             }
         }
         
@@ -322,6 +385,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function handleKeyPress(event) {
         if (gameOver) return;
+        drop.play(); // Play sound on any key press
         switch (event.keyCode) {
             case 37: moveTetromino("left"); break;
             case 39: moveTetromino("right"); break;
@@ -415,6 +479,7 @@ document.addEventListener('DOMContentLoaded', function () {
         redrawBoard();
         document.getElementById("score").innerText = "Score: " + score;
         document.getElementById("level").innerText = "Level: " + level;
+        document.getElementById("lives").innerText = "vidas: " + lives;
         currentTetromino = randomTetromino();
     }
     

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TetrisController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,12 +17,15 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('site');
 });
-Route::get('/tetris', function () {
-    return view('tetris');
-});
+Route::get('/tetris', [TetrisController::class, 'index']);
+Route::post('/tetris/score', [TetrisController::class, 'store'])->name('tetris.store');
 Route::get('/dash', function () {
     return view('dash');
 });
 Route::get('/ray', function () {
     return view('ray');
+});
+
+Route::get('/presentation', function () {
+    return view('presentation');
 });
