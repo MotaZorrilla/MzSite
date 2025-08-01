@@ -19,6 +19,7 @@ Route::get('/', function () {
 });
 Route::get('/tetris', [TetrisController::class, 'index']);
 Route::post('/tetris/score', [TetrisController::class, 'store'])->name('tetris.store');
+
 Route::get('/dash', function () {
     return view('dash');
 });
@@ -28,4 +29,8 @@ Route::get('/ray', function () {
 
 Route::get('/presentation', function () {
     return view('presentation');
+});
+
+Route::get('/plumber', function () {
+    return view('plumber');
 });
