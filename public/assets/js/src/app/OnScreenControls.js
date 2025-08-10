@@ -9,7 +9,8 @@ export default class OnScreenControls {
      * Constructor for the OnScreenControls class.
      * Initializes button mapping and sets up event listeners.
      */
-    constructor() {
+    constructor(audioManager) {
+        this.audioManager = audioManager;
         /**
          * @property {object} buttonMapping - Mapping of HTML button IDs to the keys they will simulate.
          * Allows a single on-screen button to simulate one or more key presses.
@@ -19,8 +20,9 @@ export default class OnScreenControls {
             'btn-down': 'ArrowDown',
             'btn-left': 'ArrowLeft',
             'btn-right': 'ArrowRight',
+            'btn-start': 'Enter', // Start button for pause/resume.
             'btn-b': ['Control', 'f'], // Action button (Fire: Plumber: Control, Angel: f).
-            'btn-a': 'Enter'        // Jump/interaction button.
+            'btn-a': ['ArrowUp', 'w'] // Jump button for both characters.
         };
 
         /**
@@ -59,8 +61,11 @@ export default class OnScreenControls {
      * @param {Event} event - The DOM event object (MouseEvent or TouchEvent).
      * @param {string} buttonId - The ID of the HTML button that was pressed.
      */
-    handlePress(event, buttonId) {
-        event.preventDefault(); // Prevents default browser behavior (e.g., scroll).
+    async handlePress(event, buttonId) {
+        if (event.cancelable) {
+            event.preventDefault(); // Prevents default browser behavior (e.g., scroll).
+        }
+        await this.audioManager.resumeAudioContext();
         const key = this.buttonMapping[buttonId];
         const element = document.getElementById(buttonId);
 
@@ -84,7 +89,9 @@ export default class OnScreenControls {
      * @param {string} buttonId - The ID of the HTML button that was released.
      */
     handleRelease(event, buttonId) {
-        event.preventDefault(); // Prevents default browser behavior.
+        if (event.cancelable) {
+            event.preventDefault(); // Prevents default browser behavior.
+        }
         const key = this.buttonMapping[buttonId];
         const element = document.getElementById(buttonId);
 

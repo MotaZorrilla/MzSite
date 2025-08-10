@@ -17,7 +17,9 @@ export default class Angel {
      * @param {number} y - Initial Y position of the Angel.
      * @param {function} createProjectileCallback - Callback function to create projectiles.
      */
-    constructor(x, y, createProjectileCallback) {
+    constructor(x, y, createProjectileCallback, audioManager) {
+        this.createProjectileCallback = createProjectileCallback;
+        this.audioManager = audioManager;
         this.createProjectileCallback = createProjectileCallback;
         this.attackCooldown = 0.5; // Attack cooldown in seconds.
         this.attackTimer = 0; // Timer to control attack cooldown.
@@ -167,14 +169,15 @@ export default class Angel {
         };
 
         this.image = new Image();
-        this.image.src = './assets/Angel.png';
+        this.image.src = '/assets/images/plumber/Angel.png';
 
         this.isReady = false;
         this.image.onload = () => { this.isReady = true; }
 
-        // Assigns keyboard event listeners.
-        document.addEventListener('keydown', this.onKeyDown.bind(this));
-        document.addEventListener('keyup', this.onKeyUp.bind(this));
+    // Track key states to prevent repeated firing on key hold
+    this.keyStates = { control: false };
+    document.addEventListener('keydown', this.onKeyDown.bind(this));
+    document.addEventListener('keyup', this.onKeyUp.bind(this));
     }
 
     /**
@@ -234,36 +237,40 @@ export default class Angel {
      * Only active if the Angel is under player control.
      * @param {KeyboardEvent} event - The keyboard event object.
      */
-    onKeyDown(event) {
+    async onKeyDown(event) {
+        await this.audioManager.resumeAudioContext();
         if (!this.state.isPlayerControlled || this.state.isDead) return; // Ignores input if not player-controlled or dead.
 
         const key = event.key.toLowerCase();
 
-        if (key === 'a' || key === 'arrowleft') {
+        if (key === 'arrowleft') {
             this.state.direction = -1; // Sets movement direction to left.
             this.state.playerIdleTimer = 0; // Resets inactivity timer.
             this.state.isSitting = false; // Stands up if sitting.
-        } else if (key === 'd' || key === 'arrowright') {
+        } else if (key === 'arrowright') {
             this.state.direction = 1; // Sets movement direction to right.
             this.state.playerIdleTimer = 0;
             this.state.isSitting = false;
-        } else if ((key === 'w' || key === 'arrowup') && this.state.isOnGround) {
+        } else if (key === 'arrowup' && this.state.isOnGround) {
             this.state.vy = -ANGEL_JUMP_FORCE; // Applies initial jump force.
             this.state.isOnGround = false;
             this.state.jumpsLeft--;
             this.state.playerIdleTimer = 0;
             this.state.isSitting = false;
-        } else if ((key === 'w' || key === 'arrowup') && !this.state.isOnGround && this.state.jumpsLeft > 0) {
+        } else if (key === 'arrowup' && !this.state.isOnGround && this.state.jumpsLeft > 0) {
             this.state.vy = -ANGEL_DOUBLE_JUMP_FORCE; // Applies double jump force.
             this.state.jumpsLeft--;
             this.state.playerIdleTimer = 0;
             this.state.isSitting = false;
-        } else if (key === 'f' && this.attackTimer <= 0 && this.state.burstCooldownTimer <= 0) {
-            this.fireProjectile(); // Fires a projectile.
-            this.state.playerFiredSignal = true; // Signals the other character (AI) that a shot has been fired.
-            this.state.playerIdleTimer = 0;
-            this.state.isSitting = false;
-        } else if ((key === 's' || key === 'arrowdown') && this.state.isOnGround && !this.state.isAttacking) {
+        } else if (key === 'control') {
+            if (!this.keyStates.control && this.attackTimer <= 0 && this.state.burstCooldownTimer <= 0) {
+                this.fireProjectile(); // Fires a projectile.
+                this.state.playerFiredSignal = true; // Signals the other character (AI) that a shot has been fired.
+                this.state.playerIdleTimer = 0;
+                this.state.isSitting = false;
+            }
+            this.keyStates.control = true;
+        } else if (key === 'arrowdown' && this.state.isOnGround && !this.state.isAttacking) {
             // Toggles sitting/crouching state.
             this.state.isSitting = !this.state.isSitting;
             this.state.playerIdleTimer = 0; // Resets inactivity timer when changing state.
@@ -282,13 +289,14 @@ export default class Angel {
     onKeyUp(event) {
         const key = event.key.toLowerCase();
 
-        if (key === 'a' || key === 'd' || key === 'arrowleft' || key === 'arrowright') {
+        if (key === 'arrowleft' || key === 'arrowright') {
             this.state.direction = 0; // Stops horizontal movement.
             this.state.playerIdleTimer = 0; // Resets inactivity timer.
             this.state.isSitting = false; // Stands up when movement stops.
-        } else if (key === 'f') {
+        } else if (key === 'control') {
             this.state.isAttacking = false;
-        } else if (key === 's' || key === 'arrowdown') {
+            this.keyStates.control = false;
+        } else if (key === 'arrowdown') {
             // Sitting/crouching logic is managed in `onKeyDown` to allow toggling.
         }
     }
@@ -301,12 +309,15 @@ export default class Angel {
      * @param {boolean} plumberFiredSignal - Signal indicating if the Plumber has fired in the current frame.
      */
     update(dt, plumber, plumberFiredSignal) {
-        // If Plumber fired and Angel is AI-controlled, force Angel to attack.
-        if (!this.state.isPlayerControlled && plumberFiredSignal && this.state.angelAttackDelayTimer <= 0) {
-            this.state.isSitting = false; // Angel stands up to attack.
+        // Detecta flanco de subida de plumberFiredSignal
+        if (this._prevPlumberFiredSignal === undefined) this._prevPlumberFiredSignal = false;
+        // Solo dispara si plumberFiredSignal pasa de false a true (flanco de subida)
+        if (!this.state.isPlayerControlled && plumberFiredSignal && !this._prevPlumberFiredSignal && this.state.angelAttackDelayTimer <= 0) {
+            this.state.isSitting = false;
             this.fireProjectile();
             this.state.angelAttackDelayTimer = ANGEL_ATTACK_DELAY;
         }
+        this._prevPlumberFiredSignal = plumberFiredSignal;
 
         // Updates attack cooldown timer.
         if (this.attackTimer > 0) {
@@ -363,12 +374,11 @@ export default class Angel {
 
         // Specific logic for AI or player control.
         if (!this.state.isPlayerControlled) {
-            const INACTIVITY_VELOCITY_THRESHOLD = 0.5;
+            const INACTIVITY_VELOCITY_THRESHOLD = 1;
             // Determines if the Plumber is idle for the Angel to sit.
             const isPlumberIdle = plumber && plumber.state &&
-                                  Math.abs(plumber.state.vx) < INACTIVITY_VELOCITY_THRESHOLD &&
-                                  !plumber.state.isDead &&
-                                  !plumberFiredSignal; // If Plumber fired, it's not considered "idle" for Angel's sitting logic.
+                                  plumber.state.direction === 0 && // Check if Plumber is not trying to move
+                                  !plumber.state.isDead;
 
             // AI logic for sitting due to Plumber's inactivity.
             if (isPlumberIdle && !this.state.isAttacking) {
@@ -675,13 +685,7 @@ export default class Angel {
         this.healthBar = healthBar;
     }
 
-    /**
-     * Injects the audio manager dependency.
-     * @param {AudioManager} audioManager - The audio manager instance.
-     */
-    setAudioManager(audioManager) {
-        this.audioManager = audioManager;
-    }
+    
 
     render(ctx) {
         if (!this.isReady || !this.camera) return;

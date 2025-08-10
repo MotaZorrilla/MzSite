@@ -1,0 +1,28 @@
+/* 
+Making the selector more specific to ensure it overrides the default styles from reveal.js.
+This targets any <section> with the class .slide-box inside the .slides container of a .reveal presentation.
+*/
+.reveal .slides section.slide-box {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef) !important; /* A light gradient to match the white theme */
+    border-radius: 15px;
+    padding: 25px !important; /* Reduced padding */
+    margin: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    color: #212529 !important; /* Dark text for readability on light background */
+    text-align: left !important; /* Override reveal.js's default center alignment */
+}
+
+/* Font size adjustments for content inside our custom boxes */
+.reveal .slides section.slide-box h2 {
+    font-size: 1.4em !important;
+}
+
+.reveal .slides section.slide-box h3 {
+    font-size: 1.1em !important;
+}
+
+.reveal .slides section.slide-box p,
+.reveal .slides section.slide-box li {
+    font-size: 0.95em !important;
+    line-height: 1.4 !important;
+}

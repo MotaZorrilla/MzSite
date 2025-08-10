@@ -43,7 +43,7 @@ export default class FinalBossProjectile {
         };
 
         this.image = new Image();
-        this.image.src = './assets/FinalBoss.png'; // Placeholder, change to FinalBoss.png
+        this.image.src = 'assets/images/plumber/FinalBoss.png'; // Placeholder, change to FinalBoss.png
 
         this.isReady = false;
         this.image.onload = () => { this.isReady = true; };

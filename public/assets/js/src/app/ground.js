@@ -8,7 +8,7 @@ export default class Ground {
     constructor() {
         // Creates a new image object for the ground tileset.
         this.image = new Image();
-        this.image.src = './assets/Tileset.png';
+        this.image.src = '/assets/images/plumber/Tileset.png';
 
         // Flag to know if the tileset image has been loaded.
         this.isReady = false;

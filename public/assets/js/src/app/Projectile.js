@@ -38,7 +38,7 @@ export default class Projectile {
         };
 
         this.image = new Image();
-        this.image.src = './assets/fireball.png';
+        this.image.src = './assets/images/plumber/fireball.png';
 
         this.isReady = false;
         this.image.onload = () => { this.isReady = true; };

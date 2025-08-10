@@ -9,13 +9,13 @@ export default class Background {
     constructor() {
         // Loads the main background image with a parallax effect.
         this.image = new Image();
-        this.image.src = './assets/BackgroundMountains.png';
+        this.image.src = '/assets/images/plumber/BackgroundMountains.png';
         this.isReady = false;
         this.image.onload = () => { this.isReady = true; };
 
         // Loads the boss area background image, which includes animated elements.
         this.bossImage = new Image();
-        this.bossImage.src = './assets/bossBg.png';
+        this.bossImage.src = '/assets/images/plumber/bossBg.png';
         this.isBossImageReady = false;
         this.bossImage.onload = () => {
             this.isBossImageReady = true;

@@ -610,6 +610,23 @@
             </div>
         </section><!-- End Portfolio Section -->
 
+        <!-- ======= Financial Analysis Section ======= -->
+        <section id="financial-analysis" class="services section-bg">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Financial Analysis</h2>
+                    <p>Here you can also view an interactive presentation on personal finance, developed in collaboration with other professionals. This presentation offers a comprehensive overview of key financial concepts and investment strategies.</p>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <a href="/finance" target="_blank" 
+                        style="background: #149ddd; border: 0; padding: 10px 24px; color: #fff; transition: 0.4s; border-radius: 50px; display: inline-flex; align-items: center;">
+                         View Presentation <span style="background: white; border-radius: 50%; width: 24px; height: 24px; display: inline-flex; justify-content: center; align-items: center; margin-left: 10px;"><i class='bx bx-line-chart' style="color: #149ddd;"></i></span></a>
+                    </div>
+                </div>
+            </div>
+        </section><!-- End Financial Analysis Section -->
+
         <!-- ======= Engineering Projects Section ======= -->
         <section id="engineering" class="services section-bg">
             <div class="container">
@@ -854,8 +871,8 @@
 
                 <div class="section-title">
                     <h2>Video Games</h2>
-                    <p>I enjoy developing video games in my spare time. This section showcases some of them. <br>
-                    <strong>Click any game below to play it in your PC browser!</strong></p>
+                    <p>I enjoy developing video games in my spare time. Below are some of my creations.<br>
+                    <strong>"Plumber Battle JS" is optimized for both Mobile & PC.</strong> The other games are best experienced on a PC browser.</p>
                 </div>
 
                 <div class="testimonials-slider swiper" data-aos="fade-up" data-aos-delay="100">
@@ -876,6 +893,22 @@
                                 </a>
                             </div>
                         </div><!-- End Game 1 -->
+
+                        <!-- Game (Plumber) -->
+                        <div class="swiper-slide">
+                            <div class="testimonial-item" data-aos="fade-up" data-aos-delay="100">
+                                <a href="/plumber" target="_blank">
+                                    <p>
+                                        <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+                                        <strong>A classic hero's new adventure.</strong> This game is mobile-friendly!
+                                        <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+                                    </p>
+                                    <img src="{{ asset('images\plumber\PlumberBattleJS.png') }}" class="testimonial-icon" alt="Plumber Battle Game" style="width: auto; height: 100px;">
+                                    <h3>Plumber Battle JS</h3>
+                                    <h4>2D Platformer</h4>
+                                </a>
+                            </div>
+                        </div><!-- End Game -->
 
                         <!-- Game 2 (Dash) -->
                         <div class="swiper-slide">

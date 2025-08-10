@@ -1,24 +1,108 @@
 /* Import a retro font (optional, but recommended) */
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
+html {
+    box-sizing: border-box;
+    min-height: 100%; /* Asegura que html ocupe al menos el 100% de la altura de la ventana */
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}
+
 body {
     margin: 0;
     background-color: #202020;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    background: linear-gradient(0deg, #6139a5 0%, #4570df 100%);
     font-family: sans-serif;
-    -webkit-tap-highlight-color: transparent; /* Prevents blue flash on mobile */
+    -webkit-tap-highlight-color: transparent;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
+main {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+    /* El main ocupa todo el espacio disponible debajo de la cabecera */
+}
+
+.header {
+    width: 100%;
+    background: linear-gradient(90deg, #333 0%, #555 100%);
+    padding: 10px 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    margin-bottom: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    height: 80px;
+}
+
+main, .game-main-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    margin: 0 auto;
+}
+
+.game-main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    max-width: 100%;
+    box-sizing: border-box;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1 0 auto;
+    min-height: calc(100vh - 80px); /* Resta la altura de la cabecera */
+    margin-top: 80px; /* Empuja el contenido debajo de la cabecera */
+}
+
+.game_board_wrap {
+    display: flex;
+    flex-direction: column; /* Apila el GameBoy y el botón de Game Over */
+    align-items: center;
+    max-width: 320px; /* Ancho máximo para el GameBoy */
+    width: 100%; /* Asegura que ocupe el ancho disponible */
+    margin: 0 auto;
+}
+
+/* Simplificación de los marcos */
 #console-body {
     background-color: #d1d1d1; /* A light gray, like the Game Boy */
     border-radius: 15px; /* Symmetrical rounded corners */
     padding: 20px;
     box-shadow: 5px 10px 15px rgba(0,0,0,0.4), inset 0 0 5px rgba(0,0,0,0.2);
     border: 2px solid #aaa;
-    /* Width will adjust to content */
+    width: 320px; /* Ancho fijo para el Game Boy */
+    aspect-ratio: 320 / 455.5; /* Maintain aspect ratio for the entire Game Boy body */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.game_container, .game-board-container {
+    /* Estos divs ya no necesitan estilos de marco, solo de layout */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 #screen-area {
@@ -27,15 +111,19 @@ body {
     border-radius: 8px;
     padding: 10px;
     margin-bottom: 20px;
-    /* Canvas width (256px) + padding (2*10) + border (2*4) = 284px */
-    width: 256px; 
-    box-sizing: content-box; /* Ensures padding and border are added to the width */
+    width: 256px; /* Ancho fijo para el canvas */
+    aspect-ratio: 256 / 224; /* Maintain aspect ratio */
+    box-sizing: content-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 canvas {
     background-color: black;
     display: block;
     width: 100%; /* Canvas fills screen-area */
+    height: 100%; /* Canvas fills screen-area */
 }
 
 #controls-container {
@@ -43,8 +131,9 @@ canvas {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 10px; 
+    padding: 0 0px; 
     box-sizing: border-box;
+    width: 100%; /* Ocupa el 100% del console-body */
 }
 
 /* --- D-PAD --- */
@@ -83,10 +172,9 @@ canvas {
 
 /* --- ACTION BUTTONS (A, B) --- */
 .action-buttons {
-    width: 120px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    width: 100px; /* A bit of space for positioning */
+    height: 100px; /* Match D-pad height */
+    position: relative; /* Anchor for absolute positioning of children */
 }
 
 .action-btn {
@@ -102,9 +190,407 @@ canvas {
     cursor: pointer;
     user-select: none;
     box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+    position: absolute; /* Position both buttons absolutely */
 }
 
 .action-btn.pressed { transform: scale(0.95); box-shadow: inset 0 0 10px #000; }
 
-#btn-b { background-color: #b22222; /* Firebrick */ margin-top: 30px; margin-right: -15px; /* Slight overlap */ }
-#btn-a { background-color: #4682b4; /* Steelblue */ }
+#btn-b { 
+    background-color: #b22222; /* Firebrick */ 
+    left: -px; /* Position B to the left of A */
+    bottom: 17px;
+}
+
+#btn-a { 
+    background-color: #4682b4; /* Steelblue */ 
+    right: 0px;
+    bottom: 70px; /* Position A above B without overlap */
+}
+
+/* --- START BUTTON --- */
+.start-button {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end; /* Align to the bottom */
+    height: 100%; /* Take full height to allow alignment */
+    padding-bottom: 10px; /* Add some padding from the bottom */
+}
+
+.start-btn {
+    width: 60px;
+    height: 25px;
+    background-color: #555;
+    border-radius: 10px;
+    border: 2px solid #333;
+    color: white;
+    font-family: 'Press Start 2P', sans-serif;
+    font-size: 8px;
+    text-align: center;
+    line-height: 22px; /* Vertically center text */
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 2px 2px 3px rgba(0,0,0,0.4);
+}
+
+.start-btn.pressed {
+    background-color: #777;
+    transform: translate(1px, 1px);
+    box-shadow: inset 0 0 5px #000;
+}
+
+/* Estilos para game_info */
+#game_info {
+    background-color: #1a1a2e; /* Fondo oscuro de Tetris */
+    border-radius: 15px; /* Bordes redondeados */
+    padding: 20px; /* Padding consistente */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* Sombra de Tetris */
+    width: 100%;
+    max-width: 320px; /* Mismo ancho que el Game Boy */
+    box-sizing: border-box;
+    margin-top: 20px;
+    color: #e0e0e0; /* Color de texto claro */
+    font-family: 'Press Start 2P', cursive; /* Fuente retro */
+}
+
+#game_info h4 {
+    color: #ffffff; /* Blanco de Tetris */
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-bottom: 2px solid #3e5eba; /* Borde azul de Tetris */
+    padding-bottom: 5px;
+    margin-top: 15px;
+    margin-bottom: 15px; /* Ajustado para consistencia */
+    text-align: center;
+    text-shadow: 3px 3px 5px #000; /* Sombra de texto de Tetris */
+    font-size: 1em;
+}
+
+.score-item {
+    display: flex;
+    justify-content: space-between;
+    margin: 8px 0;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #2a2a3e; /* Fondo de item de Tetris */
+    transition: transform 0.2s, box-shadow 0.2s;
+    font-size: 14px;
+    width: 100%;
+}
+
+#top-scores {
+    padding: 18px 8px !important;
+}
+
+/* Uniformar fuente de la tabla de scores */
+.score-item, #score, #top-scores, #recent-scores, .score-modal-info {
+    font-family: 'Press Start 2P', monospace, Arial, sans-serif !important;
+    font-size: 0.85em;
+    letter-spacing: 1px;
+}
+
+.score-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.score-item span:first-child {
+    font-weight: bold;
+}
+
+.score-gold {
+    background: linear-gradient(45deg, #ffd700, #f0c700);
+    color: #332a00;
+}
+
+.score-silver {
+    background: linear-gradient(45deg, #c0c0c0, #b0b0b0);
+    color: #2c2c2c;
+}
+
+.score-bronze {
+    background: linear-gradient(45deg, #cd7f32, #b87329);
+    color: #4d2f0f;
+}
+
+.bi-trophy-fill {
+    margin-right: 10px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.score-gold .bi-trophy-fill { color: #ffc107; }
+.score-silver .bi-trophy-fill { color: #a8a8a8; }
+.score-bronze .bi-trophy-fill { color: #a06835; }
+
+/* Estilos para el modal de ayuda */
+#questionsModal .modal-content {
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+    background-color: #f8f9fa; /* Fondo claro */
+}
+
+#questionsModal .modal-header {
+    background-color: #007bff; /* Color de encabezado de Bootstrap */
+    color: white;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    padding: 15px 20px;
+}
+
+#questionsModal .modal-title {
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
+#questionsModal .modal-body {
+    padding: 20px;
+    font-size: 1.05em;
+    line-height: 1.4; /* Reducido para mayor compacidad */
+    color: #333;
+}
+
+#questionsModal .modal-body p {
+    margin-bottom: 0.5em; /* Reducido aún más el margen inferior para mayor compacidad */
+}
+
+#questionsModal .modal-body ul {
+    margin-bottom: 0.8em; /* Reducido el margen inferior */
+    padding-left: 20px;
+}
+
+#questionsModal .modal-body ul li {
+    margin-bottom: 0.1em; /* Reducido aún más para mayor compacidad en las listas */
+}
+
+#questionsModal .modal-body strong {
+    color: #0056b3; /* Un azul más oscuro para resaltar */
+}
+
+#questionsModal .modal-footer {
+    border-top: 1px solid #e9ecef;
+    padding: 15px 20px;
+}
+
+/* Estilos para el modal de Game Over/Guardar Puntuación */
+#gameOverModal .modal-content {
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* Similar a game_info */
+    background-color: #1a1a2e; /* Fondo oscuro como game_info */
+    border: 2px solid #3e5eba; /* Borde azul como Tetris game_board */
+    font-family: 'Press Start 2P', cursive; /* Fuente retro */
+    color: #e0e0e0; /* Color de texto claro */
+}
+
+#gameOverModal .modal-header {
+    background-color: #3e5eba; /* Azul oscuro, similar al borde de Tetris */
+    color: #ffffff; /* Texto blanco */
+    border-top-left-radius: 13px; /* Ligeramente más pequeño para ajustarse al border-radius del contenido */
+    border-top-right-radius: 13px;
+    padding: 15px 20px;
+    border-bottom: 2px solid #2a2a3e; /* Borde más oscuro */
+}
+
+#gameOverModal .modal-title {
+    font-size: 1.1em; /* Tamaño de fuente ligeramente más pequeño */
+    font-weight: bold;
+    text-shadow: 2px 2px 4px #000; /* Sombra de texto retro */
+    color: #00ff00; /* Verde como la pantalla del Game Boy */
+}
+
+#gameOverModal .modal-body {
+    padding: 20px;
+    font-size: 0.9em; /* Fuente más pequeña */
+    line-height: 1.5;
+    color: #e0e0e0; /* Color de texto claro */
+    background-color: #1a1a2e; /* Fondo oscuro consistente */
+}
+
+#gameOverModal .modal-footer {
+    border-top: 2px solid #2a2a3e; /* Borde consistente */
+    padding: 15px 20px;
+    background-color: #1a1a2e; /* Fondo oscuro consistente */
+}
+
+#gameOverModal .form-label {
+    color: #00ff00; /* Etiqueta verde */
+    font-size: 0.9em;
+    margin-bottom: 5px;
+}
+
+#gameOverModal .form-control {
+    background-color: #0d0d1a; /* Fondo oscuro del input */
+    border: 1px solid #3e5eba; /* Borde azul */
+    color: #e0e0e0; /* Color de texto claro */
+    font-family: 'Press Start 2P', cursive;
+    padding: 8px;
+    border-radius: 5px;
+}
+
+#gameOverModal .btn-primary,
+#gameOverModal .btn-secondary {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.8em;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+    transition: all 0.2s ease;
+}
+
+#gameOverModal .btn-primary {
+    background-color: #00ff00; /* Botón primario verde */
+    border-color: #008000;
+    color: #1a1a2e; /* Texto oscuro */
+}
+
+#gameOverModal .btn-primary:hover {
+    background-color: #00cc00;
+    border-color: #006600;
+    transform: translateY(-2px);
+    box-shadow: 2px 4px 8px rgba(0,0,0,0.6);
+}
+
+#gameOverModal .btn-secondary {
+    background-color: #555; /* Botón secundario gris */
+    border-color: #333;
+    color: #e0e0e0; /* Texto claro */
+}
+
+#gameOverModal .btn-secondary:hover {
+    background-color: #777;
+    border-color: #555;
+    transform: translateY(-2px);
+    box-shadow: 2px 4px 8px rgba(0,0,0,0.6);
+}
+
+/* Ajustes para móviles */
+@media (max-width: 767.98px) {
+    #game_info {
+        padding: 15px; /* Reducir padding en móviles */
+        max-width: 95%; /* Permitir que ocupe más ancho en pantallas pequeñas */
+    }
+
+    .score-item {
+        font-size: 1em; /* Reducir tamaño de fuente en móviles */
+        padding: 6px 3px;
+    }
+
+    #questionsModal .modal-content {
+        margin: 10px; /* Margen alrededor del modal en móviles */
+    }
+
+    #questionsModal .modal-body {
+        font-size: 1em; /* Ajustar tamaño de fuente en móviles */
+        padding: 15px;
+    }
+}
+
+/* --- Fix overflow and border radius for Game Over Modal --- */
+#gameOverModal .modal-content {
+    border-radius: 1rem !important;
+    overflow: hidden;
+}
+#gameOverModal .modal-body {
+    border-radius: 0 0 1rem 1rem !important;
+    overflow: hidden;
+}
+
+/* Media Queries para responsividad */
+@media (max-width: 767.98px) {
+    .header .content {
+        flex-direction: row; /* En móviles, los elementos de la cabecera en fila */
+        justify-content: space-between;
+    }
+
+    .header .logo {
+        margin-right: auto; /* Empuja el logo de Mota Zorrilla a la izquierda */
+    }
+
+    .header .game-title-image {
+        display: none; /* Oculta el logo del juego en la cabecera en móviles */
+    }
+
+    .header .help {
+        margin-left: auto; /* Empuja los botones de ayuda a la derecha */
+    }
+
+    .header .help .collapse.navbar-collapse {
+        position: absolute;
+        top: 100%; /* Debajo de la cabecera */
+        right: 0;
+        background-color: #333;
+        width: 150px; /* Ancho del menú desplegable */
+        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        padding: 0; /* Eliminado el padding horizontal */
+        flex-direction: column; /* Apila los botones verticalmente */
+        align-items: center; /* Centra los botones */
+        z-index: 1000; /* Asegura que esté por encima de otros elementos */
+    }
+
+    .header .help .collapse.navbar-collapse .btn {
+        width: 100%;
+        text-align: center; /* Centra el texto de los botones */
+        padding: 8px 0; /* Eliminado el padding horizontal */
+        margin: 0; /* Explicitly remove margin */
+    }
+
+    .game-main-content {
+        padding: 10px; /* Reduce el padding en móviles */
+    }
+
+    
+
+    
+
+    #game_info {
+        padding: 10px; /* Reduce el padding del info en móviles */
+    }
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+}
+
+.header {
+    width: 100%;
+    background: linear-gradient(90deg, #333 0%, #555 100%); /* Gris oscuro a más suave */
+    padding: 10px 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    margin-bottom: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    height: 80px;
+}
+
+/* Tabla de puntuación con ancho igual al marco del canvas y fuente retro */
+#game_info, #top-scores, #recent-scores {
+    width: 320px;
+    max-width: 100%;
+    margin: 0 auto;
+    font-family: 'Press Start 2P', monospace, Arial, sans-serif;
+    font-size: 0.85em;
+    letter-spacing: 1px;
+    background: linear-gradient(90deg, #222 0%, #444 100%);
+    border-radius: 8px;
+    padding: 18px 24px 18px 24px; /* Más padding horizontal y vertical */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.score-item {
+    font-family: 'Press Start 2P', monospace, Arial, sans-serif;
+}
+
+.footer {
+    position: relative;
+    width: 100%;
+    padding: 10px 0;
+    text-align: center;
+    background: #1ecb4f; /* Verde vibrante */
+    color: #fff;
+    margin-top: auto;
+    font-family: 'Press Start 2P', monospace, Arial, sans-serif;
+    font-size: 1em;
+    letter-spacing: 1px;
+}

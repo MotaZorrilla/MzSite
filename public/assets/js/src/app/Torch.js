@@ -45,7 +45,7 @@ export default class Torch {
         };
 
         this.image = new Image();
-        this.image.src = './assets/boss.png'; // Uses the boss spritesheet.
+        this.image.src = 'assets/images/plumber/boss.png'; // Uses the boss spritesheet.
 
         this.isReady = false;
         this.image.onload = () => { this.isReady = true; };

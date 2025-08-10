@@ -11,13 +11,17 @@ class AudioManager {
     constructor() {
         this.audioContext = null;
         this.masterGain = null;
+        this.musicGain = null;
         this.isSupported = true; // Assumes compatibility until proven otherwise
+        this.muteState = 0; // 0: all sounds, 1: only music muted, 2: all muted
 
         // Compatibility with older browsers
         try {
             this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
             this.masterGain = this.audioContext.createGain();
+            this.musicGain = this.audioContext.createGain();
             this.masterGain.connect(this.audioContext.destination);
+            this.musicGain.connect(this.masterGain);
             
         } catch (e) {
             
@@ -28,6 +32,7 @@ class AudioManager {
         this.audioBuffers = {}; // Stores decoded audio buffers
         this.musicSource = null; // Reference to the current music source
         this.isReady = false; // Flag to indicate if sounds are loaded
+        this.hasBeenResumed = false; // Flag to ensure resume is only called once
 
         if (this.isSupported) {
             this.setVolume(0.5); // Default volume at 50%
@@ -101,7 +106,7 @@ class AudioManager {
         this.musicSource = this.audioContext.createBufferSource();
         this.musicSource.buffer = this.audioBuffers[name];
         this.musicSource.loop = true;
-        this.musicSource.connect(this.masterGain);
+        this.musicSource.connect(this.musicGain);
         this.musicSource.start(0);
     }
 
@@ -117,6 +122,24 @@ class AudioManager {
     }
 
     /**
+     * Pauses the audio context, effectively pausing all sound.
+     */
+    pauseMusic() {
+        if (this.isSupported && this.audioContext.state === 'running') {
+            this.audioContext.suspend();
+        }
+    }
+
+    /**
+     * Resumes the audio context, resuming all sound.
+     */
+    resumeMusic() {
+        if (this.isSupported && this.audioContext.state === 'suspended') {
+            this.audioContext.resume();
+        }
+    }
+
+    /**
      * Sets the global game volume.
      * @param {number} volume - A value between 0 (mute) and 1 (maximum).
      */
@@ -124,6 +147,33 @@ class AudioManager {
         if (!this.isSupported) return;
         if (this.masterGain) {
             this.masterGain.gain.setValueAtTime(volume, this.audioContext.currentTime);
+        }
+    }
+
+    resumeAudioContext() {
+        if (this.isSupported && this.audioContext.state === 'suspended' && !this.hasBeenResumed) {
+            this.hasBeenResumed = true;
+            return this.audioContext.resume();
+        }
+        return Promise.resolve();
+    }
+
+    toggleMute() {
+        if (!this.isSupported) return;
+
+        this.muteState = (this.muteState + 1) % 3;
+
+        switch (this.muteState) {
+            case 0: // All sounds on
+                this.masterGain.gain.setValueAtTime(0.5, this.audioContext.currentTime);
+                this.musicGain.gain.setValueAtTime(1, this.audioContext.currentTime);
+                break;
+            case 1: // Mute music only
+                this.musicGain.gain.setValueAtTime(0, this.audioContext.currentTime);
+                break;
+            case 2: // Mute all
+                this.masterGain.gain.setValueAtTime(0, this.audioContext.currentTime);
+                break;
         }
     }
 }

@@ -36,62 +36,27 @@ export default class FinalBoss {
      * @param {function} createTorchCallback - Callback to create torch-type projectiles.
      * @param {function} createFinalBossProjectileCallback - Callback to create boss-specific projectiles (acid).
      */
-    constructor(x, y, createProjectileCallback, createTorchCallback, createFinalBossProjectileCallback) {
-        this.createProjectileCallback = createProjectileCallback; // Callback for fireball projectile creation.
-        this.createTorchCallback = createTorchCallback; // Callback for torch projectile creation.
-        this.createFinalBossProjectileCallback = createFinalBossProjectileCallback; // Callback for acid projectile creation.
-        this.audioManager = null; // Audio manager for sound effect playback.
+    constructor(x, y, createProjectileCallback, createTorchCallback, createFinalBossProjectileCallback, audioManager, difficulty = 'normal', health = 1000, maxHealth = 1000, damage = 20, updateScoreCallback) {
+        this.createProjectileCallback = createProjectileCallback;
+        this.createTorchCallback = createTorchCallback;
+        this.createFinalBossProjectileCallback = createFinalBossProjectileCallback;
+        this.audioManager = audioManager;
+        this.updateScore = updateScoreCallback;
 
-        /**
-         * @property {object} state - Object encapsulating the Final Boss's current state.
-         * @property {number} state.x - Current X position.
-         * @property {number} state.y - Current Y position.
-         * @property {number} state.initialY - Initial Y position for floating.
-         * @property {number} state.initialX - Initial X position for horizontal patrol.
-         * @property {number} state.width - Boss's width.
-         * @property {number} state.height - Boss's height.
-         * @property {number} state.health - Current health of the boss.
-         * @property {number} state.maxHealth - Maximum health of the boss.
-         * @property {boolean} state.isAttacking - Indicates if the boss is performing an attack.
-         * @property {boolean} state.isHurt - Indicates if the boss is in a "hurt" state.
-         * @property {boolean} state.isDead - Indicates if the boss has been defeated.
-         * @property {string} state.animation - Name of the current animation (e.g., 'idle', 'attack').
-         * @property {number} state.currentFrame - Index of the current animation frame.
-         * @property {number} state.frameTimer - Timer for controlling animation speed.
-         * @property {number} state.attackCooldown - Time to wait between attacks.
-         * @property {number} state.attackTimer - Timer for attack cooldown.
-         * @property {number} state.hurtTimer - Timer for "hurt" state duration.
-         * @property {boolean} state.shouldBeRemoved - Flag to indicate that the boss should be removed from the game.
-         * @property {boolean} state.facingLeft - Indicates if the boss is facing left.
-         * @property {number} state.torchesFiredInAttack - Counter for torches fired in the current attack sequence.
-         * @property {boolean} state.animationFinished - Flag to indicate if an animation (e.g., death) has finished.
-         * @property {boolean} state.isActive - Indicates if the final boss is active and processing game logic.
-         * @property {boolean} state.isActivatedAndReady - Indicates if the final boss has been activated and is ready to start its attacks.
-         * @property {number} state.verticalSpeed - Vertical floating speed.
-         * @property {number} state.verticalDirection - Vertical floating direction (1: down, -1: up).
-         * @property {number} state.patrolDirection - Horizontal patrol direction (1: right, -1: left).
-         * @property {number} state.baseFireballCooldown - Base cooldown for fireball attack.
-         * @property {number} state.baseTorchCooldown - Base cooldown for torch attack.
-         * @property {number} state.baseAcidCooldown - Base cooldown for acid projectile attack.
-         * @property {number} state.baseFireballSpeed - Base speed of fireballs.
-         * @property {number} state.baseTorchSpeed - Base speed of torches.
-         * @property {number} state.baseAcidSpeed - Base speed of acid projectiles.
-         * @property {number} state.fireballAttackTimer - Timer for fireball attack.
-         * @property {number} state.torchAttackTimer - Timer for torch attack.
-         * @property {number} state.acidAttackTimer - Timer for acid projectile attack.
-         * @property {boolean} state.rafagaSoundPlayed - Flag to control the playback of the burst sound.
-         * @property {number} state.vy - Current vertical velocity of the boss (used in death fall).
-         * @property {boolean} state.isOnGround - Indicates if the boss is on the ground (used in death fall).
-         */
         this.state = {
             x: x,
             y: y,
-            initialY: y, // Store the initial Y position
-            initialX: x, // Stores the initial X position
+            initialY: y,
+            initialX: x,
             width: FINAL_BOSS_WIDTH,
             height: FINAL_BOSS_HEIGHT,
-            health: 1000,
-            maxHealth: 1000,
+            health: health,
+            maxHealth: maxHealth,
+            // ... (resto del estado)
+        };
+
+        this.state = {
+            ...this.state, // Keep existing properties
             isAttacking: false,
             isHurt: false,
             isDead: false,
@@ -200,7 +165,7 @@ export default class FinalBoss {
         };
 
         this.image = new Image();
-        this.image.src = './assets/FinalBoss.png';
+        this.image.src = '/assets/images/plumber/FinalBoss.png';
 
         this.isReady = false;
         this.image.onload = () => { this.isReady = true; };
@@ -487,6 +452,9 @@ export default class FinalBoss {
         if (this.state.isDead) return; // Ignores damage if the boss is already dead.
 
         this.state.health -= amount;
+        if (this.updateScore) {
+            this.updateScore(amount);
+        }
         this.state.isHurt = true;
         this.state.currentFrame = 0;
         this.state.frameTimer = 0;

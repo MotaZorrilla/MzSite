@@ -8,7 +8,7 @@ import { CANVAS_WIDTH, CANVAS_HEIGHT } from "./config.js";
 export default class WelcomeScreen {
     constructor() {
         this.image = new Image();
-        this.image.src = './assets/PlumberBattleJS.PNG';
+        this.image.src = '/assets/images/plumber/PlumberBattleJS.png';
 
         this.isReady = false;
         this.image.onload = () => {

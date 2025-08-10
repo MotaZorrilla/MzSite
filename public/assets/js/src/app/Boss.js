@@ -23,18 +23,19 @@ export const BOSS_DEATH_SPRITE_Y = 255; // "Death" row
  * Manages its AI, animations, attacks, and lifecycle.
  */
 export default class Boss {
-    constructor(x, y, createTorchCallback, audioManager, onDeathCallback) {
+    constructor(x, y, createTorchCallback, audioManager, onDeathCallback, health = 200, maxHealth = 200, updateScoreCallback) {
         this.createTorchCallback = createTorchCallback;
         this.audioManager = audioManager;
         this.onDeathCallback = onDeathCallback;
+        this.updateScore = updateScoreCallback; // Store the callback
 
         this.state = {
             x,
             y,
             width: BOSS_WIDTH,
             height: BOSS_HEIGHT,
-            health: 200,
-            maxHealth: 200,
+            health: health,
+            maxHealth: maxHealth,
             isAttacking: false,
             isHurt: false,
             isDead: false,
@@ -93,7 +94,7 @@ export default class Boss {
         };
 
         this.image = new Image();
-        this.image.src = './assets/boss.png';
+        this.image.src = 'assets/images/plumber/boss.png';
 
         this.isReady = false;
         this.image.onload = () => { this.isReady = true; };
@@ -245,6 +246,9 @@ export default class Boss {
 
         // Reduces the boss's health.
         this.state.health -= amount;
+        if (this.updateScore) {
+            this.updateScore(amount);
+        }
         this.audioManager.playSound('hit'); // Damage sound
         
         // Activates the "hurt" state and resets the hurt animation.

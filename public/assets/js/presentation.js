@@ -173,10 +173,8 @@ async function fetchCryptoPrices() {
     if (!cryptoPricesDiv) return;
 
     try {
-        const response = await web_fetch({
-            prompt: 'Fetch crypto prices from https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,ripple,litecoin&vs_currencies=usd'
-        });
-        const data = JSON.parse(response.text);
+        const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,ripple,litecoin&vs_currencies=usd');
+        const data = await response.json();
 
         let html = '<h4>Precios Actuales:</h4>';
         const formatter = new Intl.NumberFormat('es-ES', {

@@ -36,6 +36,7 @@ export default class Plumber {
             isDead: false,              // Is it dead?
             isPlayerControlled: true, // By default, player controls it
             playerFiredSignal: false,   // Flag to notify the other character's AI that the player has fired,
+            _prevAngelFiredSignal: false, // Flag to store the previous state of the Angel's fired signal
             
             aiAttackDelayTimer: 0,      // Timer for Plumber's AI attack delay.
             plumberAutoJumpTimer: 0,    // Timer for Plumber's AI auto-jump.
@@ -62,7 +63,7 @@ export default class Plumber {
 
         // Loads the character spritesheet.
         this.image = new Image();
-        this.image.src = './assets/plumber3.png';
+        this.image.src = '/assets/images/plumber/plumber3.png';
         this.isReady = false;
         this.image.onload = () => { this.isReady = true; }
 
@@ -95,7 +96,8 @@ export default class Plumber {
      * Handles key press events to control the Plumber.
      * @param {KeyboardEvent} event - The keyboard event.
      */
-    onKeyDown(event) {
+    async onKeyDown(event) {
+        await this.audioManager.resumeAudioContext();
         if (!this.state.isPlayerControlled || this.state.isDead) return;
 
         const key = event.key.toLowerCase();
@@ -226,7 +228,6 @@ export default class Plumber {
         this.computeAnimation();
         this.updateAnimationFrame(dt);
 
-        
     }
 
     /**
@@ -265,10 +266,12 @@ export default class Plumber {
         }
 
         // Firing logic if Angel (player) fires and cooldown allows.
-        if (target.state.playerFiredSignal && this.state.aiAttackDelayTimer <= 0) {
+        // Detect rising edge of Angel's playerFiredSignal
+        if (target.state.playerFiredSignal && !this.state._prevAngelFiredSignal && this.state.aiAttackDelayTimer <= 0) {
             this.fireProjectile();
             this.state.aiAttackDelayTimer = PLUMBER_ATTACK_DELAY;
         }
+        this.state._prevAngelFiredSignal = target.state.playerFiredSignal;
     }
 
 
@@ -455,13 +458,7 @@ export default class Plumber {
         this.healthBar = healthBar;
     }
 
-    /**
-     * Injects the audio manager dependency.
-     * @param {AudioManager} audioManager - The audio manager instance.
-     */
-    setAudioManager(audioManager) {
-        this.audioManager = audioManager;
-    }
+    
 
     /**
      * Draws the Plumber on the canvas, calling the generic animation function.
