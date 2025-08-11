@@ -103,7 +103,7 @@
     <section id="hero" class="d-flex flex-column justify-content-center align-items-center">
         <div class="hero-container" data-aos="fade-in">
             <h1>Mota Zorrilla</h1>
-            <p>I'm <span class="typed" data-typed-items="Engineer, Designer, Developer, Freelancer"></span></p>
+            <p>I'm <span class="typed" data-typed-items="an Engineer, a Designer, a Developer, a Freelancer"></span></p>
         </div>
     </section><!-- End Hero -->
 
