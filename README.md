@@ -6,6 +6,12 @@ Este proyecto es una aplicación web desarrollada en Laravel 10 que tiene como o
 
 Para visitantes no autenticados, la página principal del repositorio (`/masonry`) ofrece una experiencia enriquecida con secciones públicas que incluyen información sobre el archivo, extractos destacados de obras, preguntas frecuentes sobre la masonería y testimonios.
 
+## Estado Actual (Agosto 2025)
+
+El proyecto ha completado la fase de maquetación estática del panel de administración. Las vistas para la gestión de documentos, galería y usuarios están visualmente definidas en `resources/views/admin/dashboard.blade.php`. También se ha corregido y unificado el layout principal de la aplicación (barra de navegación lateral y pie de página) para que sea consistente tanto en la vista pública (`/masonry`) como en el panel de administración.
+
+El siguiente paso es implementar la funcionalidad del **backend** para el panel de administración, comenzando por la **Gestión de Usuarios**.
+
 ## Tecnologías Principales
 
 *   **Backend:** Laravel 10
