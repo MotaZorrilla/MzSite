@@ -1,66 +1,49 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Proyecto: Trazados y Planchas - Repositorio Masónico
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Descripción General
 
-## About Laravel
+Este proyecto es una aplicación web desarrollada en Laravel 10 que tiene como objetivo crear un repositorio digital seguro para documentos masónicos, denominados "Trazados y Planchas". La plataforma gestionará el acceso a los documentos basado en el grado masónico del usuario, asegurando que el material sea accesible solo para los miembros autorizados.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Para visitantes no autenticados, la página principal del repositorio (`/masonry`) ofrece una experiencia enriquecida con secciones públicas que incluyen información sobre el archivo, extractos destacados de obras, preguntas frecuentes sobre la masonería y testimonios.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Tecnologías Principales
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+*   **Backend:** Laravel 10
+*   **Frontend:** Blade con Bootstrap
+*   **Autenticación:** Laravel Breeze (anteriormente Laravel UI)
+*   **Base de Datos:** SQLite (para desarrollo)
+*   **Gestión de Activos:** Vite
 
-## Learning Laravel
+## Plan de Desarrollo
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+El desarrollo de la aplicación se divide en las siguientes fases:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### FASE 1: Panel de Administración y Gestión de Contenido
+*   **Objetivo:** Crear una interfaz segura para que los administradores gestionen el contenido y los usuarios.
+*   **Tareas:**
+    *   Crear un panel de administración (`/admin`).
+    *   Implementar la funcionalidad para subir, editar y eliminar archivos (PDFs).
+    *   Gestionar las preguntas y respuestas utilizadas en el proceso de registro para la validación de grado.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### FASE 2: Registro Público y Acceso por Grado
+*   **Objetivo:** Permitir que nuevos usuarios se registren y accedan al contenido correspondiente a su grado.
+*   **Tareas:**
+    *   Desarrollar un formulario de registro público (gestionado por Laravel Breeze).
+    *   Implementar un sistema de preguntas dinámicas que se presentan durante el registro para verificar el grado del usuario.
+    *   Asegurar que los usuarios solo puedan ver y descargar los documentos autorizados para su grado.
 
-## Laravel Sponsors
+### FASE 3: Interacción y Mejoras de UX
+*   **Objetivo:** Mejorar la experiencia del usuario y añadir funcionalidades de interacción.
+*   **Tareas:**
+    *   Añadir un sistema de comentarios en los documentos, gestionable por los administradores.
+    *   **Autenticación:** Se ha implementado el sistema de autenticación de Laravel Breeze, reemplazando los modales de Livewire por páginas completas de inicio de sesión y registro con un diseño consistente.
+    *   **Contenido Público:** La página del repositorio (`/masonry`) ahora incluye secciones públicas como "Sobre el Archivo Masónico", "Extractos Públicos Destacados", "Preguntas Frecuentes" y "Testimonios y Comentarios" para enriquecer la experiencia de los visitantes no autenticados.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### FASE 4: Pulido General
+*   **Objetivo:** Finalizar la aplicación, mejorando la navegación y la identidad visual.
+*   **Tareas:**
+    *   Refinar la navegación interna entre las diferentes secciones.
+    *   Consolidar la marca visual y el diseño general de la plataforma.
 
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Pruebas
+*   Se están desarrollando pruebas unitarias y de características para asegurar la robustez y el correcto funcionamiento de la aplicación, especialmente para la gestión de obras masónicas.

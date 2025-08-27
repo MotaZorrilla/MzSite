@@ -1,39 +1,43 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TetrisController;
-use App\Http\Controllers\PlumberController;
-use App\Http\Controllers\ProfileController; // Aunque no se use, lo mantenemos por si acaso
+use App\Models\MasonicWork;
+use App\Http\Controllers\MasonicWorkController;
 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
 */
 
-// Ruta principal del portafolio
 Route::get('/', function () {
     return view('site');
 });
 
-// Rutas de juegos estáticos
-Route::get('/dash', function () {
-    return view('dash');
+Route::get('/masonry', function () {
+    $works = MasonicWork::all();
+    return view('masonry', compact('works'));
+})->name('masonry.index');
+
+Route::post('/masonry', [MasonicWorkController::class, 'store'])->name('masonry.store');
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Route for image uploads
+    Route::post('/images', [App\Http\Controllers\ImageController::class, 'storeGalleryImage'])->name('images.store');
 });
 
-Route::get('/ray', function () {
-    return view('ray');
-});
-
-Route::get('/finance', function () {
-    return view('finance');
-});
-
-// Rutas para Tetris (con su controlador)
-Route::get('/tetris', [TetrisController::class, 'index']);
-Route::post('/tetris/score', [TetrisController::class, 'store']);
-
-// Rutas para Plumber (con su controlador)
-Route::get('/plumber', [PlumberController::class, 'index']);
-Route::post('/plumber/score', [PlumberController::class, 'store']);
-
+require __DIR__.'/auth.php';

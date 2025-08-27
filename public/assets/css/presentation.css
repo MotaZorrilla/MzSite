@@ -418,8 +418,108 @@
             padding: 40px 20px; /* Relleno */
             border-radius: 15px; /* Bordes redondeados */
         }
+
+/* --- Farewell Content (within slide-box) --- */
+.farewell-content {
+    /* Inherits background, padding, etc. from .slide-box */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px; /* Ensure consistent padding */
+}
+
+.farewell-content h2 {
+    font-family: var(--heading-font);
+    color: var(--heading-color); /* Use standard heading color */
+    font-size: 2.5em; /* Keep large size */
+    margin-bottom: 30px;
+    border-bottom: 3px solid var(--primary-color); /* Add border like other h2s */
+    padding-bottom: 10px;
+    display: inline-block; /* For border to fit content */
+}
+
+.farewell-content p {
+    font-family: var(--main-font);
+    color: var(--main-color); /* Use standard main text color */
+    font-size: 1.2em;
+    margin-bottom: 40px;
+}
+
+.farewell-content .social-links-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 50px;
+}
+
+.farewell-content .social-links-container h3 {
+    font-family: var(--heading-font);
+    color: var(--heading-color); /* Use standard heading color */
+    margin-bottom: 10px;
+}
+
+.farewell-content .social-links-container a {
+    color: var(--primary-color); /* Use primary color for links */
+    font-size: 2em;
+    transition: color 0.3s;
+}
+
+.farewell-content .social-links-container a:hover {
+    color: var(--accent-color);
+}
+
+.farewell-content .download-button {
+    background: var(--primary-color); /* Primary color background for the button */
+    color: white; /* White text on primary background */
+    border: none;
+    padding: 15px 30px;
+    transition: 0.4s;
+    border-radius: 50px;
+    font-size: 1.2em;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 20px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.farewell-content .download-button:hover {
+    background: var(--accent-color);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.farewell-content .download-button span {
+    background: white; /* White background for the circle */
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 15px;
+}
+
+.farewell-content .download-button span i {
+    color: var(--primary-color); /* Primary color icon */
+    font-size: 1.2em;
+}
+
+.farewell-content .website-link {
+    color: var(--main-color); /* Use standard main text color */
+    font-size: 0.9em;
+}
+
+.farewell-content .website-link a {
+    color: var(--primary-color); /* Use primary color for the link */
+    text-decoration: underline;
+}
         
-/* Estilos para el contenedor de botones de llamada a la acción */
+/* Estilos para el contenedor de botones de llamada a acción */
         .cta-buttons {
             display: flex; /* Usa flexbox */
             justify-content: center; /* Centra los elementos horizontalmente */
@@ -566,8 +666,8 @@
 
 .signature-link {
     position: absolute;
-    bottom: -5rem;
-    right: 3rem;
+    bottom: -9rem;
+    right: 1rem;
     width: 150px; /* Ajusta el tamaño de la firma */
 }
 

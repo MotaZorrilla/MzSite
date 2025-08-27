@@ -8,7 +8,7 @@ This targets any <section> with the class .slide-box inside the .slides containe
     padding: 25px !important; /* Reduced padding */
     margin: 20px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    color: #212529 !important; /* Dark text for readability on light background */
+    /* Removed color: #212529 !important; to allow variable colors to apply */
     text-align: left !important; /* Override reveal.js's default center alignment */
 }
 
