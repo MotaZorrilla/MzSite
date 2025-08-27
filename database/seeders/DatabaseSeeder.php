@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call(HighScoreSeeder::class);
+        $this->call(DegreeSeeder::class);
 
         // Crear un usuario administrador por defecto
         User::firstOrCreate(

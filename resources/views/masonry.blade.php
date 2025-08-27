@@ -8,8 +8,8 @@
     <title>Archivo Masónico</title>
 
     <!-- Favicons -->
-    <link href="{{ asset('img/favicon.png') }}" rel="icon">
-    <link href="{{ asset('img/apple-touch-icon.png') }}" rel="apple-touch-icon">
+    <link href="{{ asset('img/profile-img.jpeg') }}" rel="icon">
+    <link href="{{ asset('img/profile-img.jpeg') }}" rel="apple-touch-icon">
 
     <!-- Google Fonts -->
     <link
@@ -72,49 +72,6 @@
     </section><!-- End Hero -->
 
     <main id="main">
-
-        <!-- ======= Admin Upload Section ======= -->
-        <section id="upload" class="services" data-aos="fade-up">
-            <div class="container">
-                <div class="section-title">
-                    <h2>Panel de Administrador</h2>
-                    <p>Esta sección solo será visible para los administradores.</p>
-                </div>
-                <div class="row">
-                    <div class="col-lg-12">
-                        <form action="{{ route('masonry.store') }}" method="POST" enctype="multipart/form-data">
-                            @csrf
-                            <div class="row">
-                                <div class="col-md-6 form-group">
-                                    <input type="text" name="title" class="form-control" placeholder="Título del Documento" required>
-                                </div>
-                                <div class="col-md-6 form-group mt-3 mt-md-0">
-                                    <select name="required_degree" class="form-select" required>
-                                        <option value="">Seleccionar Grado...</option>
-                                        <option value="1">Aprendiz</option>
-                                        <option value="2">Compañero</option>
-                                        <option value="3">Maestro</option>
-                                        <!-- Añadir más grados si es necesario -->
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group mt-3">
-                                <textarea name="description" class="form-control" rows="3" placeholder="Descripción breve"></textarea>
-                            </div>
-                            <div class="form-group mt-3">
-                                <label for="file" class="form-label">Archivo PDF (máx. 10MB)</label>
-                                <input type="file" name="file" class="form-control" id="file" accept="application/pdf" required>
-                            </div>
-                            <div class="form-group mt-3 form-check">
-                                <input type="checkbox" name="is_public" class="form-check-input" id="is_public">
-                                <label class="form-check-label" for="is_public">Hacer público (visible sin login)</label>
-                            </div>
-                            <div class="text-center mt-3"><button type="submit" class="btn btn-primary">Subir Archivo</button></div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </section><!-- End Admin Upload Section -->
 
         <!-- ======= Repository Section ======= -->
         <section id="repository" class="portfolio section-bg" data-aos="fade-up">
