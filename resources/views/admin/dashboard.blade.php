@@ -122,6 +122,13 @@
                                         <button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#manageDocumentCategoryModal">+</button>
                                     </div>
                                 </div>
+                                <div class="col-md-6 form-group">
+                                    <label for="doc_source" class="form-label">Fuente</label>
+                                    <select name="source" id="doc_source" class="form-select" required>
+                                        <option value="Propio" selected>Propio</option>
+                                        <option value="Biblioteca">Biblioteca</option>
+                                    </select>
+                                </div>
                             </div>
                             <div class="form-group mt-3">
                                 <label for="doc_description" class="form-label">Descripción Breve</label>
@@ -139,44 +146,7 @@
                 <!-- PDF Management Table -->
                 <div class="row">
                     <div class="col-lg-12">
-                        <h4 class="mb-3">Documentos Existentes</h4>
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Título</th>
-                                        <th>Descripción</th>
-                                        <th>Categoría</th>
-                                        <th>Grado Req.</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse ($works as $work)
-                                    <tr>
-                                        <td>{{ $work->id }}</td>
-                                        <td>{{ $work->title }}</td>
-                                        <td>{{ Str::limit($work->description, 50) }}</td>
-                                        <td><span class="badge bg-info">{{ $work->documentCategory->name ?? 'Sin categoría' }}</span></td>
-                                        <td><span class="badge bg-secondary">{{ $work->required_degree }}°</span></td>
-                                        <td class="d-flex flex-wrap justify-content-center align-items-center gap-1">
-                                            <a href="{{ route('admin.documents.edit', $work) }}" class="btn btn-sm btn-primary flex-grow-1">Editar</a>
-                                            <form action="{{ route('admin.documents.destroy', $work) }}" method="POST" class="d-inline flex-grow-1">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger w-100" onclick="return confirm('¿Estás seguro de que quieres eliminar este documento?')">Eliminar</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                    @empty
-                                    <tr>
-                                        <td colspan="6" class="text-center">No hay documentos subidos todavía.</td>
-                                    </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
+                        @livewire('admin-documents-table')
                     </div>
                 </div>
             </div>
@@ -226,42 +196,7 @@
                 <!-- Image Management Table -->
                 <div class="row">
                     <div class="col-lg-12">
-                        <h4 class="mb-3">Imágenes Existentes</h4>
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Miniatura</th>
-                                        <th>Título</th>
-                                        <th>Categoría</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse ($galleryImages as $image)
-                                    <tr>
-                                        <td>{{ $image->id }}</td>
-                                        <td><img src="{{ Storage::url($image->file_path) }}" alt="{{ $image->title }}" style="width: 100px; height: auto;"></td>
-                                        <td>{{ $image->title }}</td>
-                                        <td><span class="badge bg-info">{{ $image->imageCategory->name ?? 'Sin categoría' }}</span></td>
-                                        <td>
-                                            <a href="{{ route('admin.gallery.edit', $image) }}" class="btn btn-sm btn-primary">Editar</a>
-                                            <form action="{{ route('admin.gallery.destroy', $image) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar esta imagen?')">Eliminar</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                    @empty
-                                    <tr>
-                                        <td colspan="5" class="text-center">No hay imágenes subidas todavía.</td>
-                                    </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
+                        @livewire('admin-gallery-table')
                     </div>
                 </div>
             </div>
@@ -322,56 +257,7 @@
                 <!-- Users Management Table -->
                 <div class="row">
                     <div class="col-lg-12">
-                        <h4 class="mb-3">Usuarios Existentes</h4>
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Nombre</th>
-                                        <th>Email</th>
-                                        <th>Rol</th>
-                                        <th>Grado</th>
-                                        <th style="width: 250px;">Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($users as $user)
-                                    <tr>
-                                        <form action="{{ route('admin.users.update', $user) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            @method('PATCH')
-                                            <td>{{ $user->id }}</td>
-                                            <td>{{ $user->name }}</td>
-                                            <td>{{ $user->email }}</td>
-                                            <td>
-                                                <select name="role" class="form-select form-select-sm">
-                                                    <option value="usuario" @if($user->role == 'usuario') selected @endif>Usuario</option>
-                                                    <option value="administrador" @if($user->role == 'administrador') selected @endif>Administrador</option>
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <select name="degree_id" class="form-select form-select-sm">
-                                                    <option value="">N/A</option>
-                                                    @foreach ($degrees as $degree)
-                                                        <option value="{{ $degree->id }}" @if($user->degree_id == $degree->id) selected @endif>{{ $degree->id }}°</option>
-                                                    @endforeach
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <button type="submit" class="btn btn-sm btn-success">Guardar</button>
-                                        </form>
-                                        <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar a este usuario?')">Eliminar</button>
-                                        </form>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                        @livewire('admin-users-table')
                     </div>
                 </div>
             </div>

@@ -45,6 +45,14 @@
                             </select>
                         </div>
 
+                        <div class="form-group mb-3">
+                            <label for="source" class="form-label">Fuente</label>
+                            <select name="source" id="source" class="form-select" required>
+                                <option value="Propio" {{ $work->source == 'Propio' ? 'selected' : '' }}>Propio</option>
+                                <option value="Biblioteca" {{ $work->source == 'Biblioteca' ? 'selected' : '' }}>Biblioteca</option>
+                            </select>
+                        </div>
+
                         <div class="text-center">
                             <button type="submit" class="btn btn-primary">Actualizar</button>
                             <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">Cancelar</a>

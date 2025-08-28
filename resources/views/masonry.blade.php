@@ -31,6 +31,31 @@
         #header .nav-menu {
             overflow-y: auto;
         }
+
+        .card-title-truncate {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-height: 2.5em; /* Aprox. 2 líneas para consistencia */
+        }
+
+        .card-text-truncate {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .gallery-scroll-container {
+            max-height: 800px; /* Altura máxima para la galería */
+            overflow-y: auto;   /* Scroll vertical solo cuando sea necesario */
+            padding: 1em;
+            border: 1px solid #e3e3e3;
+            border-radius: 5px;
+        }
     </style>
 
 </head>
@@ -101,58 +126,74 @@
                     <p>Un repositorio de documentos donde encontrarás piezas de arquitectura, trazados, planchas, libros y más, organizados por grado para facilitar su estudio.</p>
                 </div>
 
-                {{-- Público General --}}
-                <h3 class="degree-title">Público General</h3>
-                <ul class="nav nav-tabs" id="public-tab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="public-propio-tab" data-bs-toggle="tab" data-bs-target="#public-propio" type="button" role="tab" aria-controls="public-propio" aria-selected="true">Propio</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="public-biblioteca-tab" data-bs-toggle="tab" data-bs-target="#public-biblioteca" type="button" role="tab" aria-controls="public-biblioteca" aria-selected="false">Biblioteca</button>
-                    </li>
-                </ul>
-                <div class="tab-content" id="public-tabContent">
-                    <div class="tab-pane fade show active" id="public-propio" role="tabpanel" aria-labelledby="public-propio-tab">
-                        <div class="row">
-                            <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4">
-                                <div class="card w-100"><div class="card-body d-flex flex-column"><h5 class="card-title"><a href="#">La Masonería y la Sociedad</a></h5><p class="card-text flex-grow-1">Un análisis sobre el impacto de la orden en el mundo moderno.</p><a href="#" class="btn btn-primary align-self-start">Leer más</a></div></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="public-biblioteca" role="tabpanel" aria-labelledby="public-biblioteca-tab">
-                        <div class="row">
-                             <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4">
-                                <div class="card w-100"><div class="card-body d-flex flex-column"><h5 class="card-title"><a href="#">Introducción a la Masonería</a></h5><p class="card-text flex-grow-1">Libro de dominio público para entender los conceptos básicos.</p><a href="#" class="btn btn-primary align-self-start">Leer más</a></div></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @php
+                    use Illuminate\Support\Str;
 
-                {{-- Grado 1 --}}
-                <h3 class="degree-title mt-5">1° - Grado de Aprendiz</h3>
-                <ul class="nav nav-tabs" id="aprendiz-tab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="aprendiz-propio-tab" data-bs-toggle="tab" data-bs-target="#aprendiz-propio" type="button" role="tab" aria-controls="aprendiz-propio" aria-selected="true">Propio</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="aprendiz-biblioteca-tab" data-bs-toggle="tab" data-bs-target="#aprendiz-biblioteca" type="button" role="tab" aria-controls="aprendiz-biblioteca" aria-selected="false">Biblioteca</button>
-                    </li>
-                </ul>
-                <div class="tab-content" id="aprendiz-tabContent">
-                    <div class="tab-pane fade show active" id="aprendiz-propio" role="tabpanel" aria-labelledby="aprendiz-propio-tab">
-                        <div class="row">
-                            <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4">
-                                <div class="card w-100"><div class="card-body d-flex flex-column"><h5 class="card-title"><a href="#">El Mandil y su Simbolismo</a></h5><p class="card-text flex-grow-1">Análisis profundo sobre la importancia, uso y significado de la primera herramienta del masón.</p><a href="#" class="btn btn-primary align-self-start">Leer más</a></div></div>
+                    // Creamos un mapa ordenado de los grados presentes en los trabajos para mostrarlos en orden.
+                    $degreeMap = $works->map(function($work) {
+                        return $work->degree;
+                    })
+                    ->whereNotNull() // Filtramos grados nulos si existieran
+                    ->unique('id')
+                    ->sortBy('id')
+                    ->pluck('name', 'id');
+
+                    // Añadimos el grado público (0) al principio si hay trabajos públicos.
+                    if ($works->where('is_public', true)->isNotEmpty()) {
+                        $degreeMap->prepend('Público General', 0);
+                    }
+                @endphp
+
+                @if($works->isEmpty())
+                    <div class="alert alert-info mt-4">
+                        <h4 class="alert-heading">Repositorio en Construcción</h4>
+                        <p>Aún no hay documentos disponibles para visualización. Estamos trabajando para añadir contenido de valor para todos los hermanos.</p>
+                    </div>
+                @else
+                    @foreach($degreeMap as $degreeId => $degreeName)
+                        @php
+                            // Obtenemos los trabajos para el grado actual y los agrupamos por fuente.
+                            $worksInDegree = $works->where('required_degree', $degreeId);
+                            $worksBySource = $worksInDegree->groupBy('source');
+                            $degreeSlug = Str::slug($degreeName);
+                        @endphp
+
+                        @if($worksInDegree->isNotEmpty())
+                            <h3 class="degree-title mt-5">{{ $degreeName }}</h3>
+
+                            <ul class="nav nav-tabs" id="{{ $degreeSlug }}-tab" role="tablist">
+                                @foreach($worksBySource as $source => $sourceWorks)
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link {{ $loop->first ? 'active' : '' }}" id="{{ $degreeSlug }}-{{ Str::slug($source) }}-tab" data-bs-toggle="tab" data-bs-target="#{{ $degreeSlug }}-{{ Str::slug($source) }}" type="button" role="tab" aria-controls="{{ $degreeSlug }}-{{ Str::slug($source) }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">{{ $source }}</button>
+                                    </li>
+                                @endforeach
+                            </ul>
+
+                            <div class="tab-content" id="{{ $degreeSlug }}-tabContent">
+                                @foreach($worksBySource as $source => $sourceWorks)
+                                    <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="{{ $degreeSlug }}-{{ Str::slug($source) }}" role="tabpanel" aria-labelledby="{{ $degreeSlug }}-{{ Str::slug($source) }}-tab">
+                                        <div class="row">
+                                            @forelse($sourceWorks as $work)
+                                                <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4">
+                                                    <div class="card w-100 h-100"><div class="card-body d-flex flex-column">
+                                                        <h5 class="card-title card-title-truncate"><a href="{{ route('masonic_works.show', $work) }}" target="_blank">{{ $work->title }}</a></h5>
+                                                        <p class="card-text flex-grow-1 card-text-truncate">{{ $work->description }}</p>
+                                                        <div class="mt-auto pt-2 d-flex justify-content-between align-items-center">
+                                                            <span class="badge bg-info text-dark">{{ $work->documentCategory->name ?? 'Sin Categoría' }}</span>
+                                                            <a href="{{ route('masonic_works.show', $work) }}" target="_blank" class="btn btn-primary">Leer más</a>
+                                                        </div>
+                                                    </div></div>
+                                                </div>
+                                            @empty
+                                                <p class="p-3">No hay documentos en esta sección.</p>
+                                            @endforelse
+                                        </div>
+                                    </div>
+                                @endforeach
                             </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="aprendiz-biblioteca" role="tabpanel" aria-labelledby="aprendiz-biblioteca-tab">
-                        <p class="p-3">No hay documentos en la biblioteca para este grado.</p>
-                    </div>
-                </div>
-
-                 {{-- Aquí irían los 32 grados restantes, siguiendo el mismo patrón de pestañas --}}
-
+                        @endif
+                    @endforeach
+                @endif
             </div>
         </section><!-- End Repository Section -->
 
@@ -198,47 +239,32 @@
                     <div class="col-lg-12 d-flex justify-content-center">
                         <ul id="portfolio-flters">
                             <li data-filter="*" class="filter-active">Todas</li>
-                            <li data-filter=".filter-app">Actos</li>
-                            <li data-filter=".filter-card">Celebraciones</li>
-                            <li data-filter=".filter-web">Templo</li>
+                            @foreach ($imageCategories as $category)
+                                <li data-filter=".filter-{{ Str::slug($category->name) }}">{{ $category->name }}</li>
+                            @endforeach
                         </ul>
                     </div>
                 </div>
 
-                <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="100">
+                <div class="gallery-scroll-container" id="gallery-container">
+                    <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="100">
 
-                    <div class="col-lg-4 col-md-6 portfolio-item filter-card">
-                        <div class="portfolio-wrap">
-                            <img src="{{ asset('img/portfolio/A1.jpg') }}" class="img-fluid" alt="">
-                            <div class="portfolio-links">
-                                <a href="{{ asset('img/portfolio/A1.jpg') }}" data-gallery="portfolioGallery"
-                                    class="portfolio-lightbox" title="Celebracion 1"><i class="bx bx-plus"></i></a>
+                        @forelse ($galleryImages as $image)
+                        <div class="col-lg-4 col-md-6 portfolio-item filter-{{ Str::slug($image->imageCategory->name ?? '') }}">
+                            <div class="portfolio-wrap">
+                                <img src="{{ Storage::url($image->file_path) }}" class="img-fluid" alt="{{ $image->title }}">
+                                <div class="portfolio-links">
+                                    <a href="{{ Storage::url($image->file_path) }}" data-gallery="portfolioGallery" class="portfolio-lightbox" title="{{ $image->title }}"><i class="bx bx-plus"></i></a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6 portfolio-item filter-web">
-                        <div class="portfolio-wrap">
-                            <img src="{{ asset('img/portfolio/Neobranding.png') }}" class="img-fluid"
-                                alt="">
-                            <div class="portfolio-links">
-                                <a href="{{ asset('img/portfolio/Neobranding.png') }}"
-                                    data-gallery="portfolioGallery" class="portfolio-lightbox"
-                                    title="Templo"><i class="bx bx-plus"></i></a>
-                            </div>
+                        @empty
+                        <div class="col-12">
+                            <p class="text-center">No hay imágenes en la galería todavía.</p>
                         </div>
-                    </div>
+                        @endforelse
 
-                    <div class="col-lg-4 col-md-6 portfolio-item filter-app">
-                        <div class="portfolio-wrap">
-                            <img src="{{ asset('img/portfolio/Pintura.png') }}" class="img-fluid" alt="">
-                            <div class="portfolio-links">
-                                <a href="{{ asset('img/portfolio/Pintura.png') }}" data-gallery="portfolioGallery"
-                                    class="portfolio-lightbox" title="Acto 1"><i class="bx bx-plus"></i></a>
-                            </div>
-                        </div>
                     </div>
-
                 </div>
 
             </div>
@@ -427,6 +453,90 @@
 
     <!-- Template Main JS File -->
     <script src="{{ asset('js/main.js') }}"></script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Wait for Isotope and images to be loaded before setting up the scroll listener
+        window.addEventListener('load', () => {
+            const galleryContainer = document.querySelector('#gallery-container');
+            const portfolioContainer = document.querySelector('.portfolio-container');
+
+            if (!galleryContainer || !portfolioContainer) return;
+
+            // Initialize Isotope
+            let iso = new Isotope(portfolioContainer, {
+                itemSelector: '.portfolio-item',
+                layoutMode: 'masonry' // Changed from fitRows to masonry
+            });
+
+            // Initialize GLightbox
+            let lightbox = GLightbox({
+                selector: '.portfolio-lightbox'
+            });
+
+            // Setup filter clicks
+            const filters = document.querySelectorAll('#portfolio-flters li');
+            filters.forEach(function(filter) {
+                filter.addEventListener('click', function() {
+                    filters.forEach(f => f.classList.remove('filter-active'));
+                    this.classList.add('filter-active');
+                    iso.arrange({
+                        filter: this.getAttribute('data-filter')
+                    });
+                });
+            });
+
+            // Infinite Scroll Logic
+            let page = 1;
+            let lastPage = {{ $galleryImages->lastPage() }};
+            let loading = false;
+
+            galleryContainer.addEventListener('scroll', () => {
+                if (loading || page >= lastPage) return;
+
+                const { scrollTop, scrollHeight, clientHeight } = galleryContainer;
+
+                if (scrollTop + clientHeight >= scrollHeight - 100) { // 100px buffer
+                    loading = true;
+                    page++;
+                    fetch(`/api/gallery-images?page=${page}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.data.length > 0) {
+                                let newItems = '';
+                                data.data.forEach(image => {
+                                    const categorySlug = image.image_category ? image.image_category.name.toLowerCase().replace(/ /g, '-') : '';
+                                    newItems += `
+                                        <div class="col-lg-4 col-md-6 portfolio-item filter-${categorySlug}">
+                                            <div class="portfolio-wrap">
+                                                <img src="/storage/${image.file_path}" class="img-fluid" alt="${image.title}">
+                                                <div class="portfolio-links">
+                                                    <a href="/storage/${image.file_path}" data-gallery="portfolioGallery" class="portfolio-lightbox" title="${image.title}"><i class="bx bx-plus"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>`;
+                                });
+
+                                const tempDiv = document.createElement('div');
+                                tempDiv.innerHTML = newItems;
+                                
+                                const items = Array.from(tempDiv.children);
+                                
+                                iso.insert(items);
+                                iso.layout();
+                                lightbox.reload();
+                            }
+                            loading = false;
+                        })
+                        .catch(error => {
+                            console.error('Error loading more images:', error);
+                            loading = false;
+                        });
+                }
+            });
+        });
+    });
+    </script>
 
 </body>
 

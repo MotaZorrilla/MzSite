@@ -1,7 +1,9 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TetrisController;
+use App\Http\Controllers\PlumberController;
 use App\Models\MasonicWork;
 use App\Http\Controllers\MasonicWorkController;
 use App\Http\Controllers\ImageController;
@@ -17,14 +19,34 @@ use App\Http\Controllers\ImageController;
 |
 */
 
+// Ruta principal del portafolio
 Route::get('/', function () {
     return view('site');
 });
 
-Route::get('/masonry', function () {
-    $works = MasonicWork::all();
-    return view('masonry', compact('works'));
-})->name('masonry.index');
+// Rutas de juegos estáticos
+Route::get('/dash', function () {
+    return view('dash');
+});
+Route::get('/ray', function () {
+    return view('ray');
+});
+Route::get('/finance', function () {
+    return view('finance');
+});
+
+// Rutas para Tetris (con su controlador)
+Route::get('/tetris', [TetrisController::class, 'index']);
+Route::post('/tetris/score', [TetrisController::class, 'store']);
+
+// Rutas para Plumber (con su controlador)
+Route::get('/plumber', [PlumberController::class, 'index']);
+Route::post('/plumber/score', [PlumberController::class, 'store']);
+
+// Masonic Repository Routes
+Route::get('/masonry', [MasonicWorkController::class, 'index'])->name('masonry.index');
+Route::get('/masonry/works/{work}', [MasonicWorkController::class, 'show'])->name('masonic_works.show')->middleware('auth');
+Route::get('/api/gallery-images', [MasonicWorkController::class, 'fetchMoreGalleryImages'])->name('gallery.fetch');
 
 Route::post('/masonry', [MasonicWorkController::class, 'store'])->name('masonry.store');
 

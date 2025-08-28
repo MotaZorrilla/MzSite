@@ -20,13 +20,10 @@ class AdminController extends Controller
      */
     public function index()
     {
-        $users = User::with('degree')->orderBy('id')->get();
         $degrees = Degree::all();
-        $works = MasonicWork::orderBy('id')->get();
-        $galleryImages = GalleryImage::orderBy('id')->get();
         $imageCategories = ImageCategory::orderBy('name')->get();
         $documentCategories = DocumentCategory::orderBy('name')->get();
-        return view('admin.dashboard', compact('users', 'degrees', 'works', 'galleryImages', 'imageCategories', 'documentCategories'));
+        return view('admin.dashboard', compact('degrees', 'imageCategories', 'documentCategories'));
     }
 
     /**
