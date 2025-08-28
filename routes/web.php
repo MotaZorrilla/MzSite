@@ -40,9 +40,34 @@ Route::middleware('auth')->group(function () {
     // Route for image uploads
     Route::post('/images', [App\Http\Controllers\ImageController::class, 'storeGalleryImage'])->name('images.store');
 
-    // Admin Dashboard Route
-    Route::get('/admin', [App\Http\Controllers\AdminController::class, 'index'])->name('admin.dashboard');
-    Route::patch('/admin/users/{user}', [App\Http\Controllers\AdminController::class, 'updateUser'])->name('admin.users.update');
+    // Admin Routes
+    Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/', [App\Http\Controllers\AdminController::class, 'index'])->name('dashboard');
+        
+        // User Management
+        Route::post('/users', [App\Http\Controllers\AdminController::class, 'storeUser'])->name('users.store');
+        Route::patch('/users/{user}', [App\Http\Controllers\AdminController::class, 'updateUser'])->name('users.update');
+        Route::delete('/users/{user}', [App\Http\Controllers\AdminController::class, 'destroyUser'])->name('users.destroy');
+
+        // Document Management
+        Route::post('/documents', [App\Http\Controllers\MasonicWorkController::class, 'store'])->name('documents.store');
+        Route::patch('/documents/{work}', [App\Http\Controllers\MasonicWorkController::class, 'update'])->name('documents.update');
+        Route::delete('/documents/{work}', [App\Http\Controllers\MasonicWorkController::class, 'destroy'])->name('documents.destroy');
+        Route::get('/documents/{work}/edit', [App\Http\Controllers\MasonicWorkController::class, 'edit'])->name('documents.edit');
+        Route::patch('/documents/{work}', [App\Http\Controllers\MasonicWorkController::class, 'update'])->name('documents.update');
+
+        // Gallery Management
+        Route::post('/gallery', [App\Http\Controllers\ImageController::class, 'store'])->name('gallery.store');
+        Route::delete('/gallery/{galleryImage}', [App\Http\Controllers\ImageController::class, 'destroy'])->name('gallery.destroy');
+        Route::get('/gallery/{galleryImage}/edit', [App\Http\Controllers\ImageController::class, 'edit'])->name('gallery.edit');
+        Route::patch('/gallery/{galleryImage}', [App\Http\Controllers\ImageController::class, 'update'])->name('gallery.update');
+
+        // Image Category Management
+        Route::resource('image_categories', App\Http\Controllers\ImageCategoryController::class)->except(['show', 'create']);
+
+        // Document Category Management
+        Route::resource('document_categories', App\Http\Controllers\DocumentCategoryController::class)->except(['show', 'create']);
+    });
 });
 
 require __DIR__.'/auth.php';

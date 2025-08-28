@@ -17,8 +17,17 @@ class MasonicWork extends Model
     protected $fillable = [
         'title',
         'description',
+        'document_category_id',
         'file_path',
         'required_degree',
         'is_public',
     ];
+
+    /**
+     * Get the category that the work belongs to.
+     */
+    public function documentCategory()
+    {
+        return $this->belongsTo(DocumentCategory::class);
+    }
 }

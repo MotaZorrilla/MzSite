@@ -49,7 +49,7 @@
                         </svg>
                     </a>
                     <a href="https://facebook.com/MotaZorrilla" target="_blank" class="facebook"><i class="bx bxl-facebook"></i></a>
-                    <a href="https://www.instagram.com/motazorrilla_" target="_blank" class="instagram"><i class="bx bxl-instagram"></i></a>
+                    <a href="https://www.instagram.com/motazorrilla_/" target="_blank" class="instagram"><i class="bx bxl-instagram"></i></a>
                     <a href="https://www.linkedin.com/in/motazorrilla/" target="_blank" class="linkedin"><i class="bx bxl-linkedin"></i></a>
                     <a href="/" target="_blank" class="website"><i class="bx bx-globe"></i></a>
                 </div>
@@ -91,7 +91,7 @@
                 <div class="row mb-5">
                     <div class="col-lg-12">
                         <h4 class="mb-3">Subir Nuevo Documento</h4>
-                        <form action="{{ route('masonry.store') }}" method="POST" enctype="multipart/form-data" class="p-4 border rounded">
+                        <form action="{{ route('admin.documents.store') }}" method="POST" enctype="multipart/form-data" class="p-4 border rounded">
                             @csrf
                             <div class="row">
                                 <div class="col-md-6 form-group">
@@ -102,39 +102,10 @@
                                     <label for="doc_degree" class="form-label">Grado Requerido</label>
                                     <select name="required_degree" id="doc_degree" class="form-select" required>
                                         <option value="">Seleccionar...</option>
-                                        <option value="1">1° - Aprendiz</option>
-                                        <option value="2">2° - Compañero</option>
-                                        <option value="3">3° - Maestro</option>
-                                        <option value="4">4° - Maestro Secreto</option>
-                                        <option value="5">5° - Maestro Perfecto</option>
-                                        <option value="6">6° - Secretario Íntimo</option>
-                                        <option value="7">7° - Preboste y Juez</option>
-                                        <option value="8">8° - Intendente de los Edificios</option>
-                                        <option value="9">9° - Maestro Elegido de los Nueve</option>
-                                        <option value="10">10° - Ilustre Elegido de los Quince</option>
-                                        <option value="11">11° - Sublime Caballero Elegido</option>
-                                        <option value="12">12° - Gran Maestro Arquitecto</option>
-                                        <option value="13">13° - Real Arco</option>
-                                        <option value="14">14° - Gran Elegido, Perfecto y Sublime Masón</option>
-                                        <option value="15">15° - Caballero de Oriente o de la Espada</option>
-                                        <option value="16">16° - Príncipe de Jerusalén</option>
-                                        <option value="17">17° - Caballero de Oriente y Occidente</option>
-                                        <option value="18">18° - Soberano Caballero Rosacruz</option>
-                                        <option value="19">19° - Gran Pontífice</option>
-                                        <option value="20">20° - Gran Maestro de todas las Logias Simbólicas</option>
-                                        <option value="21">21° - Patriarca Noaquita</option>
-                                        <option value="22">22° - Caballero del Real Hacha</option>
-                                        <option value="23">23° - Jefe del Tabernáculo</option>
-                                        <option value="24">24° - Príncipe del Tabernáculo</option>
-                                        <option value="25">25° - Caballero de la Serpiente de Bronce</option>
-                                        <option value="26">26° - Príncipe de Merced</option>
-                                        <option value="27">27° - Soberano Comendador del Templo</option>
-                                        <option value="28">28° - Caballero del Sol</option>
-                                        <option value="29">29° - Gran Escocés de San Andrés</option>
-                                        <option value="30">30° - Caballero Kadosh</option>
-                                        <option value="31">31° - Gran Inspector Inquisidor Comendador</option>
-                                        <option value="32">32° - Sublime y Valiente Príncipe del Real Secreto</option>
-                                        <option value="33">33° - Soberano Gran Inspector General</option>
+                                        <option value="0">0° - Público</option>
+                                        @foreach ($degrees as $degree)
+                                            <option value="{{ $degree->id }}">{{ $degree->id }}° - {{ $degree->name }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -142,24 +113,14 @@
                                 <div class="col-md-6 form-group">
                                     <label for="doc_category" class="form-label">Categoría</label>
                                     <div class="input-group">
-                                        <select name="category" id="doc_category" class="form-select" required>
+                                        <select name="document_category_id" id="doc_category" class="form-select" required>
                                             <option value="">Seleccionar...</option>
-                                            <option value="pieza_arquitectura">Pieza de Arquitectura</option>
-                                            <option value="libro">Libro</option>
-                                            <option value="manual_ritual">Manual o Ritual</option>
-                                            <option value="documento_historico">Documento Histórico</option>
-                                            <option value="otro">Otro</option>
+                                            @foreach ($documentCategories as $category)
+                                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                            @endforeach
                                         </select>
-                                        <button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#manageCategoryModal">+</button>
+                                        <button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#manageDocumentCategoryModal">+</button>
                                     </div>
-                                </div>
-                                <div class="col-md-6 form-group mt-3 mt-md-0">
-                                    <label for="doc_source" class="form-label">Origen</label>
-                                    <select name="source" id="doc_source" class="form-select" required>
-                                        <option value="">Seleccionar...</option>
-                                        <option value="propio">Propio</option>
-                                        <option value="externo">Externo</option>
-                                    </select>
                                 </div>
                             </div>
                             <div class="form-group mt-3">
@@ -185,35 +146,34 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>Título</th>
+                                        <th>Descripción</th>
                                         <th>Categoría</th>
-                                        <th>Origen</th>
                                         <th>Grado Req.</th>
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @forelse ($works as $work)
                                     <tr>
-                                        <td>1</td>
-                                        <td>El Mandil</td>
-                                        <td><span class="badge bg-info">Pieza de Arquitectura</span></td>
-                                        <td><span class="badge bg-light text-dark">Propio</span></td>
-                                        <td><span class="badge bg-secondary">1°</span></td>
-                                        <td>
-                                            <button type="button" class="btn btn-sm btn-primary">Editar</button>
-                                            <button type="button" class="btn btn-sm btn-danger">Eliminar</button>
+                                        <td>{{ $work->id }}</td>
+                                        <td>{{ $work->title }}</td>
+                                        <td>{{ Str::limit($work->description, 50) }}</td>
+                                        <td><span class="badge bg-info">{{ $work->documentCategory->name ?? 'Sin categoría' }}</span></td>
+                                        <td><span class="badge bg-secondary">{{ $work->required_degree }}°</span></td>
+                                        <td class="d-flex flex-wrap justify-content-center align-items-center gap-1">
+                                            <a href="{{ route('admin.documents.edit', $work) }}" class="btn btn-sm btn-primary flex-grow-1">Editar</a>
+                                            <form action="{{ route('admin.documents.destroy', $work) }}" method="POST" class="d-inline flex-grow-1">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-danger w-100" onclick="return confirm('¿Estás seguro de que quieres eliminar este documento?')">Eliminar</button>
+                                            </form>
                                         </td>
                                     </tr>
+                                    @empty
                                     <tr>
-                                        <td>2</td>
-                                        <td>Símbolos Secretos</td>
-                                        <td><span class="badge bg-info">Libro</span></td>
-                                        <td><span class="badge bg-light text-dark">Externo</span></td>
-                                        <td><span class="badge bg-secondary">3°</span></td>
-                                        <td>
-                                            <button type="button" class="btn btn-sm btn-primary">Editar</button>
-                                            <button type="button" class="btn btn-sm btn-danger">Eliminar</button>
-                                        </td>
+                                        <td colspan="6" class="text-center">No hay documentos subidos todavía.</td>
                                     </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>
@@ -234,7 +194,7 @@
                 <div class="row mb-5">
                     <div class="col-lg-12">
                         <h4 class="mb-3">Subir Nueva Imagen</h4>
-                        <form action="{{ route('images.store') }}" method="POST" enctype="multipart/form-data" class="p-4 border rounded">
+                        <form action="{{ route('admin.gallery.store') }}" method="POST" enctype="multipart/form-data" class="p-4 border rounded">
                             @csrf
                             <div class="row">
                                 <div class="col-md-6 form-group">
@@ -244,13 +204,13 @@
                                 <div class="col-md-6 form-group mt-3 mt-md-0">
                                     <label for="gallery_category" class="form-label">Categoría</label>
                                     <div class="input-group">
-                                        <select name="category" id="gallery_category" class="form-select" required>
+                                        <select name="image_category_id" id="gallery_category" class="form-select" required>
                                             <option value="">Seleccionar...</option>
-                                            <option value="filter-app">Actos</option>
-                                            <option value="filter-card">Celebraciones</option>
-                                            <option value="filter-web">Templo</option>
+                                            @foreach ($imageCategories as $category)
+                                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                            @endforeach
                                         </select>
-                                        <button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#manageCategoryModal">+</button>
+                                        <button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#manageImageCategoryModal">+</button>
                                     </div>
                                 </div>
                             </div>
@@ -279,26 +239,26 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @forelse ($galleryImages as $image)
                                     <tr>
-                                        <td>1</td>
-                                        <td><img src="{{ asset('img/portfolio/A1.jpg') }}" alt="A1" style="width: 100px; height: auto;"></td>
-                                        <td>Celebracion 1</td>
-                                        <td><span class="badge bg-info">Celebraciones</span></td>
+                                        <td>{{ $image->id }}</td>
+                                        <td><img src="{{ Storage::url($image->file_path) }}" alt="{{ $image->title }}" style="width: 100px; height: auto;"></td>
+                                        <td>{{ $image->title }}</td>
+                                        <td><span class="badge bg-info">{{ $image->imageCategory->name ?? 'Sin categoría' }}</span></td>
                                         <td>
-                                            <button type="button" class="btn btn-sm btn-primary">Editar</button>
-                                            <button type="button" class="btn btn-sm btn-danger">Eliminar</button>
+                                            <a href="{{ route('admin.gallery.edit', $image) }}" class="btn btn-sm btn-primary">Editar</a>
+                                            <form action="{{ route('admin.gallery.destroy', $image) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar esta imagen?')">Eliminar</button>
+                                            </form>
                                         </td>
                                     </tr>
+                                    @empty
                                     <tr>
-                                        <td>2</td>
-                                        <td><img src="{{ asset('img/portfolio/Pintura.png') }}" alt="Pintura" style="width: 100px; height: auto;"></td>
-                                        <td>Acto 1</td>
-                                        <td><span class="badge bg-info">Actos</span></td>
-                                        <td>
-                                            <button type="button" class="btn btn-sm btn-primary">Editar</button>
-                                            <button type="button" class="btn btn-sm btn-danger">Eliminar</button>
-                                        </td>
+                                        <td colspan="5" class="text-center">No hay imágenes subidas todavía.</td>
                                     </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>
@@ -319,14 +279,14 @@
                 <div class="row mb-5">
                     <div class="col-lg-12">
                         <h4 class="mb-3">Agregar Nuevo Usuario</h4>
-                        <form action="#" method="POST" class="p-4 border rounded">
+                        <form action="{{ route('admin.users.store') }}" method="POST" class="p-4 border rounded">
                             @csrf
                             <div class="row">
                                 <div class="col-md-6 form-group">
-                                    <input type="text" name="name" class="form-control" placeholder="Nombre Completo" required>
+                                    <input type="text" name="name" class="form-control" placeholder="Nombre Completo" required value="{{ old('name') }}">
                                 </div>
                                 <div class="col-md-6 form-group mt-3 mt-md-0">
-                                    <input type="email" name="email" class="form-control" placeholder="Correo Electrónico" required>
+                                    <input type="email" name="email" class="form-control" placeholder="Correo Electrónico" required value="{{ old('email') }}">
                                 </div>
                             </div>
                             <div class="row mt-3">
@@ -341,29 +301,16 @@
                                 <div class="col-md-6 form-group">
                                     <select name="role" class="form-select" required>
                                         <option value="">Asignar Rol...</option>
-                                        <option value="usuario">Usuario</option>
-                                        <option value="administrador">Administrador</option>
+                                        <option value="usuario" @if(old('role') == 'usuario') selected @endif>Usuario</option>
+                                        <option value="administrador" @if(old('role') == 'administrador') selected @endif>Administrador</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6 form-group mt-3 mt-md-0">
-                                    <select name="degree" class="form-select">
+                                    <select name="degree_id" class="form-select">
                                         <option value="">Asignar Grado (si es Usuario)...</option>
-                                        <option value="1">1° - Aprendiz</option>
-                                        <option value="2">2° - Compañero</option>
-                                        <option value="3">3° - Maestro</option>
-                                        <option value="4">4° - Maestro Secreto</option>
-                                        <option value="5">5° - Maestro Perfecto</option>
-                                        <option value="9">9° - Maestro Elegido de los Nueve</option>
-                                        <option value="14">14° - Gran Elegido, Perfecto y Sublime Masón</option>
-                                        <option value="18">18° - Soberano Caballero Rosacruz</option>
-                                        <option value="19">19° - Gran Pontífice</option>
-                                        <option value="21">21° - Patriarca Noaquita</option>
-                                        <option value="25">25° - Caballero de la Serpiente de Bronce</option>
-                                        <option value="29">29° - Gran Escocés de San Andrés</option>
-                                        <option value="30">30° - Caballero Kadosh</option>
-                                        <option value="31">31° - Gran Inspector Inquisidor Comendador</option>
-                                        <option value="32">32° - Sublime y Valiente Príncipe del Real Secreto</option>
-                                        <option value="33">33° - Soberano Gran Inspector General</option>
+                                        @foreach ($degrees as $degree)
+                                            <option value="{{ $degree->id }}" @if(old('degree_id') == $degree->id) selected @endif>{{ $degree->id }}° - {{ $degree->name }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -383,33 +330,43 @@
                                         <th>ID</th>
                                         <th>Nombre</th>
                                         <th>Email</th>
-                                        <th>Nivel de Acceso</th>
-                                        <th>Acciones</th>
+                                        <th>Rol</th>
+                                        <th>Grado</th>
+                                        <th style="width: 250px;">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($users as $user)
                                     <tr>
-                                        <form action="{{ route('admin.users.update', $user) }}" method="POST">
+                                        <form action="{{ route('admin.users.update', $user) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('PATCH')
                                             <td>{{ $user->id }}</td>
                                             <td>{{ $user->name }}</td>
                                             <td>{{ $user->email }}</td>
                                             <td>
-                                                {{-- Aquí iría la lógica para mostrar Rol o Grado --}}
-                                                <select name="access_level" class="form-select form-select-sm">
-                                                    <option value="admin" @if($user->role == 'administrador') selected @endif>Administrador</option>
-                                                    <option value="3" @if($user->role == 'usuario' && $user->degree_id == 3) selected @endif>3° - Maestro</option>
-                                                    <option value="2" @if($user->role == 'usuario' && $user->degree_id == 2) selected @endif>2° - Compañero</option>
-                                                    <option value="1" @if($user->role == 'usuario' && $user->degree_id == 1) selected @endif>1° - Aprendiz</option>
+                                                <select name="role" class="form-select form-select-sm">
+                                                    <option value="usuario" @if($user->role == 'usuario') selected @endif>Usuario</option>
+                                                    <option value="administrador" @if($user->role == 'administrador') selected @endif>Administrador</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select name="degree_id" class="form-select form-select-sm">
+                                                    <option value="">N/A</option>
+                                                    @foreach ($degrees as $degree)
+                                                        <option value="{{ $degree->id }}" @if($user->degree_id == $degree->id) selected @endif>{{ $degree->id }}°</option>
+                                                    @endforeach
                                                 </select>
                                             </td>
                                             <td>
                                                 <button type="submit" class="btn btn-sm btn-success">Guardar</button>
-                                                <button type="button" class="btn btn-sm btn-danger">Eliminar</button>
-                                            </td>
                                         </form>
+                                        <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar a este usuario?')">Eliminar</button>
+                                        </form>
+                                        </td>
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -422,48 +379,40 @@
 
     </main><!-- End #main -->
 
-    <!-- ======= Manage Category Modal ======= -->
-    <div class="modal fade" id="manageCategoryModal" tabindex="-1" aria-labelledby="manageCategoryModalLabel" aria-hidden="true">
+    <!-- ======= Manage Document Category Modal ======= -->
+    <div class="modal fade" id="manageDocumentCategoryModal" tabindex="-1" aria-labelledby="manageDocumentCategoryModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="manageCategoryModalLabel">Gestionar Categorías</h5>
+                    <h5 class="modal-title" id="manageDocumentCategoryModalLabel">Gestionar Categorías de Documentos</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    
-                    <!-- List of existing categories -->
                     <h6 class="mb-3">Categorías Existentes</h6>
-                    <ul class="list-group mb-4">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Pieza de Arquitectura
-                            <span>
-                                <button class="btn btn-sm btn-outline-primary py-0 px-1"><i class="bi bi-pencil"></i></button>
-                                <button class="btn btn-sm btn-outline-danger py-0 px-1"><i class="bi bi-trash"></i></button>
-                            </span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Libro
-                            <span>
-                                <button class="btn btn-sm btn-outline-primary py-0 px-1"><i class="bi bi-pencil"></i></button>
-                                <button class="btn btn-sm btn-outline-danger py-0 px-1"><i class="bi bi-trash"></i></button>
-                            </span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Celebraciones
-                            <span>
-                                <button class="btn btn-sm btn-outline-primary py-0 px-1"><i class="bi bi-pencil"></i></button>
-                                <button class="btn btn-sm btn-outline-danger py-0 px-1"><i class="bi bi-trash"></i></button>
-                            </span>
-                        </li>
-                    </ul>
-
-                    <!-- Form to add a new category -->
+                    @if($documentCategories->isEmpty())
+                        <p>No hay categorías de documentos definidas.</p>
+                    @else
+                        <ul class="list-group mb-4">
+                            @foreach ($documentCategories as $category)
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    {{ $category->name }}
+                                    <span>
+                                        <form action="{{ route('admin.document_categories.destroy', $category) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-1" onclick="return confirm('¿Estás seguro de que quieres eliminar esta categoría?')"><i class="bi bi-trash"></i></button>
+                                        </form>
+                                    </span>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endif
                     <h6 class="mb-3">Crear Nueva Categoría</h6>
-                    <form id="addCategoryForm">
+                    <form action="{{ route('admin.document_categories.store') }}" method="POST">
+                        @csrf
                         <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Nombre de la nueva categoría">
-                            <button class="btn btn-primary" type="button">Crear</button>
+                            <input type="text" name="name" class="form-control" placeholder="Nombre de la nueva categoría" required>
+                            <button class="btn btn-primary" type="submit">Crear</button>
                         </div>
                     </form>
                 </div>
@@ -474,8 +423,50 @@
         </div>
     </div>
 
+    <!-- ======= Manage Image Category Modal ======= -->
+    <div class="modal fade" id="manageImageCategoryModal" tabindex="-1" aria-labelledby="manageImageCategoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="manageImageCategoryModalLabel">Gestionar Categorías de Imágenes</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h6 class="mb-3">Categorías Existentes</h6>
+                    @if($imageCategories->isEmpty())
+                        <p>No hay categorías de imágenes definidas.</p>
+                    @else
+                        <ul class="list-group mb-4">
+                            @foreach ($imageCategories as $category)
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    {{ $category->name }}
+                                    <span>
+                                        <form action="{{ route('admin.image_categories.destroy', $category) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-1" onclick="return confirm('¿Estás seguro de que quieres eliminar esta categoría?')"><i class="bi bi-trash"></i></button>
+                                        </form>
+                                    </span>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endif
+                    <h6 class="mb-3">Crear Nueva Categoría</h6>
+                    <form action="{{ route('admin.image_categories.store') }}" method="POST">
+                        @csrf
+                        <div class="input-group">
+                            <input type="text" name="name" class="form-control" placeholder="Nombre de la nueva categoría" required>
+                            <button class="btn btn-primary" type="submit">Crear</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    
 
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
