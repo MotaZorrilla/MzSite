@@ -102,6 +102,94 @@
     <!-- Template Main JS File -->
     <script src="{{ asset('js/main.js') }}"></script>
 
+    <!-- ======= Manage Document Category Modal ======= -->
+    <div class="modal fade" id="manageDocumentCategoryModal" tabindex="-1" aria-labelledby="manageDocumentCategoryModalLabel" aria-hidden="true">     
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="manageDocumentCategoryModalLabel">Gestionar Categorías de Documentos</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h6 class="mb-3">Categorías Existentes</h6>
+                    @if($documentCategories->isEmpty())
+                        <p>No hay categorías de documentos definidas.</p>
+                    @else
+                        <ul class="list-group mb-4">
+                            @foreach ($documentCategories as $category)
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    {{ $category->name }}
+                                    <span>
+                                        <form action="{{ route('admin.document_categories.destroy', $category) }}" method="POST" class="d-inline">    
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-1" onclick="return confirm('¿Estás seguro de que quieres eliminar esta categoría?')"><i class="bi bi-trash"></i></button>
+                                        </form>
+                                    </span>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endif
+                    <h6 class="mb-3">Crear Nueva Categoría</h6>
+                    <form action="{{ route('admin.document_categories.store') }}" method="POST">
+                        @csrf
+                        <div class="input-group">
+                            <input type="text" name="name" class="form-control" placeholder="Nombre de la nueva categoría" required>
+                            <button class="btn btn-primary" type="submit">Crear</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======= Manage Image Category Modal ======= -->
+    <div class="modal fade" id="manageImageCategoryModal" tabindex="-1" aria-labelledby="manageImageCategoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="manageImageCategoryModalLabel">Gestionar Categorías de Imágenes</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h6 class="mb-3">Categorías Existentes</h6>
+                    @if($imageCategories->isEmpty())
+                        <p>No hay categorías de imágenes definidas.</p>
+                    @else
+                        <ul class="list-group mb-4">
+                            @foreach ($imageCategories as $category)
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    {{ $category->name }}
+                                    <span>
+                                        <form action="{{ route('admin.image_categories.destroy', $category) }}" method="POST" class="d-inline">       
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-1" onclick="return confirm('¿Estás seguro de que quieres eliminar esta categoría?')"><i class="bi bi-trash"></i></button>
+                                        </form>
+                                    </span>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endif
+                    <h6 class="mb-3">Crear Nueva Categoría</h6>
+                    <form action="{{ route('admin.image_categories.store') }}" method="POST">
+                        @csrf
+                        <div class="input-group">
+                            <input type="text" name="name" class="form-control" placeholder="Nombre de la nueva categoría" required>
+                            <button class="btn btn-primary" type="submit">Crear</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
         @csrf
     </form>
