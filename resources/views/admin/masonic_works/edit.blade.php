@@ -23,7 +23,12 @@
 
                         <div class="form-group mb-3">
                             <label for="description" class="form-label">Descripción</label>
-                            <textarea name="description" id="description" class="form-control" rows="3">{{ $work->description }}</textarea>
+                            <textarea name="description" id="description" class="form-control @error('description') is-invalid @enderror" rows="3" required>{{ old('description', $work->description) }}</textarea>
+                            @error('description')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
 
                         <div class="form-group mb-3">

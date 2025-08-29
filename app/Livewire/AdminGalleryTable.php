@@ -29,7 +29,14 @@ class AdminGalleryTable extends Component
                 $q->where('image_category_id', $this->filterByCategory);
             });
 
-        $galleryImages = $query->latest()->paginate(5); // 5 images per page
+        $galleryImages = $query->latest()->paginate(10);
+
+        // Si la página actual no tiene resultados y no es la primera página, resetea a la página 1.
+        if ($galleryImages->isEmpty() && $galleryImages->currentPage() > 1) {
+            $this->resetPage();
+            // Vuelve a ejecutar la consulta después de resetear la página
+            $galleryImages = $query->latest()->paginate(10);
+        }
 
         $imageCategories = ImageCategory::orderBy('name')->get();
 

@@ -20,10 +20,35 @@ class AdminController extends Controller
      */
     public function index()
     {
-        $degrees = Degree::all();
-        $imageCategories = ImageCategory::orderBy('name')->get();
+        return $this->documents();
+    }
+
+    /**
+     * Display the documents management page.
+     */
+    public function documents()
+    {
+        $degrees = Degree::orderBy('id')->get();
         $documentCategories = DocumentCategory::orderBy('name')->get();
-        return view('admin.dashboard', compact('degrees', 'imageCategories', 'documentCategories'));
+        return view('admin.documents', compact('degrees', 'documentCategories'));
+    }
+
+    /**
+     * Display the gallery management page.
+     */
+    public function gallery()
+    {
+        $imageCategories = ImageCategory::orderBy('name')->get();
+        return view('admin.gallery', compact('imageCategories'));
+    }
+
+    /**
+     * Display the users management page.
+     */
+    public function users()
+    {
+        $degrees = Degree::orderBy('id')->get();
+        return view('admin.users', compact('degrees'));
     }
 
     /**
@@ -61,7 +86,7 @@ class AdminController extends Controller
         ]);
 
         $user->role = $request->role;
-        $user->degree_id = $request->role === 'usuario' ? $request->input('degree_id') : null;
+        $user->degree_id = $request->input('degree_id');
         $user->save();
 
         return back()->with('success', 'Usuario actualizado correctamente.')->withFragment('users');

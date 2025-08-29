@@ -52,7 +52,7 @@ class ImageController extends Controller
 
         $galleryImage->update($request->only('title', 'image_category_id'));
 
-        return redirect()->route('admin.dashboard')->with('success', 'Imagen actualizada con éxito.')->withFragment('gallery');
+        return redirect()->route('admin.gallery')->with('success', 'Imagen actualizada con éxito.');
     }
 
     /**

@@ -94,10 +94,25 @@
                     <li><a href="#gallery" class="nav-link scrollto"><i class="bx bx-photo-album"></i> <span>Galería</span></a></li>
                     <li><a href="#faq" class="nav-link scrollto"><i class="bx bx-question-mark"></i> <span>FAQ</span></a></li>
                     <hr class="my-2">
-                    <li><a href="{{ route('login') }}" class="nav-link"><i class="bx bx-log-in"></i> <span>Iniciar Sesión</span></a></li>
-                    <li><a href="{{ route('register') }}" class="nav-link"><i class="bx bx-user-plus"></i> <span>Registrarse</span></a></li>
+                    @guest
+                        <li><a href="{{ route('login') }}" class="nav-link"><i class="bx bx-log-in"></i> <span>Iniciar Sesión</span></a></li>
+                        <li><a href="{{ route('register') }}" class="nav-link"><i class="bx bx-user-plus"></i> <span>Registrarse</span></a></li>
+                    @endguest
+                    @auth
+                        @if(Auth::user()->role === 'administrador')
+                            <li><a href="{{ route('admin.documents') }}" class="nav-link"><i class="bx bx-cog"></i> <span>Panel Admin</span></a></li>
+                        @endif
+                        <li><a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="nav-link">
+                            <i class="bx bx-log-out"></i> <span>Cerrar Sesión</span></a>
+                        </li>
+                    @endauth
                 </ul>
             </nav><!-- .nav-menu -->
+            @auth
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                @csrf
+            </form>
+            @endauth
             <footer id="footer" class="mt-auto">
                 <div class="container">
                     <div class="copyright">

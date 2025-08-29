@@ -57,9 +57,9 @@
 
             <nav id="navbar" class="nav-menu navbar align-items-start">
                 <ul>
-                    <li><a href="{{ route('admin.dashboard') }}#documents" class="nav-link scrollto"><i class="bx bx-file"></i> <span>Documentos</span></a></li>
-                    <li><a href="{{ route('admin.dashboard') }}#gallery" class="nav-link scrollto"><i class="bx bx-photo-album"></i> <span>Galería</span></a></li>
-                    <li><a href="{{ route('admin.dashboard') }}#users" class="nav-link scrollto"><i class="bx bx-group"></i> <span>Usuarios</span></a></li>
+                    <li><a href="{{ route('admin.documents') }}" class="nav-link {{ request()->routeIs('admin.documents') || request()->routeIs('admin.dashboard') ? 'active' : '' }}"><i class="bx bx-file"></i> <span>Documentos</span></a></li>
+                    <li><a href="{{ route('admin.gallery') }}" class="nav-link {{ request()->routeIs('admin.gallery') ? 'active' : '' }}"><i class="bx bx-photo-album"></i> <span>Galería</span></a></li>
+                    <li><a href="{{ route('admin.users') }}" class="nav-link {{ request()->routeIs('admin.users') ? 'active' : '' }}"><i class="bx bx-group"></i> <span>Usuarios</span></a></li>
                     <hr class="my-2">
                     <li><a href="/masonry" class="nav-link"><i class="bx bx-world"></i> <span>Ver Sitio Público</span></a></li>
                     <li><a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="nav-link">

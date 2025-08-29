@@ -22,7 +22,8 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Admin',
                 'password' => Hash::make('password'),
-                'degree' => 'Maestro',
+                'role' => 'administrador',
+                'degree_id' => 33, // Soberano Gran Inspector General
             ]
         );
     }

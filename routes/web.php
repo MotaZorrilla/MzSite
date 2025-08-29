@@ -63,8 +63,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/images', [App\Http\Controllers\ImageController::class, 'storeGalleryImage'])->name('images.store');
 
     // Admin Routes
-    Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
+    Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [App\Http\Controllers\AdminController::class, 'index'])->name('dashboard');
+        Route::get('documents', [App\Http\Controllers\AdminController::class, 'documents'])->name('documents');
+        Route::get('gallery', [App\Http\Controllers\AdminController::class, 'gallery'])->name('gallery');
+        Route::get('users', [App\Http\Controllers\AdminController::class, 'users'])->name('users');
         
         // User Management
         Route::post('/users', [App\Http\Controllers\AdminController::class, 'storeUser'])->name('users.store');

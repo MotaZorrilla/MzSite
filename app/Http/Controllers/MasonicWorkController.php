@@ -24,11 +24,19 @@ class MasonicWorkController extends Controller
         // Data for Masonic Repository
         $query = MasonicWork::query()->with('documentCategory', 'degree');
 
-        if (Auth::check() && Auth::user()->degree_id) {
-            $userDegreeId = Auth::user()->degree_id;
-            $query->where('is_public', true)
-                  ->orWhere('required_degree', '<=', $userDegreeId);
+        if (Auth::check()) {
+            if (Auth::user()->role === 'administrador') {
+                // Admin sees all works, no additional filtering needed
+            } elseif (Auth::user()->degree_id) {
+                $userDegreeId = Auth::user()->degree_id;
+                $query->where('is_public', true)
+                      ->orWhere('required_degree', '<=', $userDegreeId);
+            } else {
+                // Authenticated but no degree_id, only public works
+                $query->where('is_public', true);
+            }
         } else {
+            // Not authenticated, only public works
             $query->where('is_public', true);
         }
 
@@ -62,7 +70,7 @@ class MasonicWorkController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'description' => 'required|string',
             'required_degree' => 'required|integer|min:0|max:33',
             'document_category_id' => 'required|exists:document_categories,id',
             'source' => 'required|string|in:Propio,Biblioteca',
@@ -101,7 +109,7 @@ class MasonicWorkController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'description' => 'required|string',
             'required_degree' => 'required|integer|min:0|max:33',
             'document_category_id' => 'required|exists:document_categories,id',
             'source' => 'required|string|in:Propio,Biblioteca',

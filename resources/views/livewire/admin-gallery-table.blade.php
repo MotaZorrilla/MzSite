@@ -52,7 +52,7 @@
         </table>
     </div>
 
-    <div class="mt-4">
+    <div class="mt-4 pe-5">
         {{ $galleryImages->links() }}
     </div>
 </div>

@@ -37,6 +37,12 @@ class AdminUsersTable extends Component
 
         $users = $query->latest()->paginate(10);
 
+        // Si la página actual no tiene resultados y no es la primera página, resetea a la página 1.
+        if ($users->isEmpty() && $users->currentPage() > 1) {
+            $this->resetPage();
+            $users = $query->latest()->paginate(10);
+        }
+
         $degrees = Degree::orderBy('id')->get();
         $roles = ['usuario', 'administrador'];
 

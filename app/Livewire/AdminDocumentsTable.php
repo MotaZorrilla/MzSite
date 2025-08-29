@@ -23,7 +23,7 @@ class AdminDocumentsTable extends Component
     public function render()
     {
         $query = MasonicWork::query()
-            ->with('documentCategory')
+            ->with('documentCategory', 'degree')
             ->when($this->search, function ($q) {
                 $q->where('title', 'like', '%' . $this->search . '%')
                   ->orWhere('description', 'like', '%' . $this->search . '%');
@@ -36,6 +36,12 @@ class AdminDocumentsTable extends Component
             });
 
         $works = $query->latest()->paginate(10);
+
+        // Si la página actual no tiene resultados y no es la primera página, resetea a la página 1.
+        if ($works->isEmpty() && $works->currentPage() > 1) {
+            $this->resetPage();
+            $works = $query->latest()->paginate(10);
+        }
 
         $documentCategories = DocumentCategory::orderBy('name')->get();
         $sources = ['Propio', 'Biblioteca'];

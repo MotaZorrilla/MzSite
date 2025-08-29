@@ -39,34 +39,34 @@
             <tbody>
                 @forelse ($users as $user)
                 <tr>
-                    <form action="{{ route('admin.users.update', $user) }}" method="POST" class="d-inline">
-                        @csrf
-                        @method('PATCH')
-                        <td>{{ $user->id }}</td>
-                        <td title="{{ $user->name }}">{{ Str::limit($user->name, 25) }}</td>
-                        <td title="{{ $user->email }}">{{ Str::limit($user->email, 25) }}</td>
-                        <td>
-                            <select name="role" class="form-select form-select-sm">
-                                <option value="usuario" @if($user->role == 'usuario') selected @endif>Usuario</option>
-                                <option value="administrador" @if($user->role == 'administrador') selected @endif>Administrador</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select name="degree_id" class="form-select form-select-sm">
-                                <option value="">N/A</option>
-                                @foreach ($degrees as $degree)
-                                    <option value="{{ $degree->id }}" @if($user->degree_id == $degree->id) selected @endif>{{ $degree->id }}°</option>
-                                @endforeach
-                            </select>
-                        </td>
-                        <td style="white-space: nowrap;">
+                    <td>{{ $user->id }}</td>
+                    <td title="{{ $user->name }}">{{ Str::limit($user->name, 25) }}</td>
+                    <td title="{{ $user->email }}">{{ Str::limit($user->email, 25) }}</td>
+                    <td>
+                        <select name="role" class="form-select form-select-sm" form="update-form-{{ $user->id }}">
+                            <option value="usuario" @if($user->role == 'usuario') selected @endif>Usuario</option>
+                            <option value="administrador" @if($user->role == 'administrador') selected @endif>Administrador</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="degree_id" class="form-select form-select-sm" form="update-form-{{ $user->id }}">
+                            <option value="">N/A</option>
+                            @foreach ($degrees as $degree)
+                                <option value="{{ $degree->id }}" @if($user->degree_id == $degree->id) selected @endif>{{ $degree->id }}°</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td style="white-space: nowrap;">
+                        <form action="{{ route('admin.users.update', $user) }}" method="POST" class="d-inline" id="update-form-{{ $user->id }}">
+                            @csrf
+                            @method('PATCH')
                             <button type="submit" class="btn btn-sm btn-success">Guardar</button>
-                    </form>
-                    <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="d-inline ms-1">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar a este usuario?')">Eliminar</button>
-                    </form>
+                        </form>
+                        <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="d-inline ms-1">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar a este usuario?')">Eliminar</button>
+                        </form>
                     </td>
                 </tr>
                 @empty
@@ -78,7 +78,7 @@
         </table>
     </div>
 
-    <div class="mt-4">
+    <div class="mt-4 pe-5">
         {{ $users->links() }}
     </div>
 </div>
