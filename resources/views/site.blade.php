@@ -103,7 +103,7 @@
     <section id="hero" class="d-flex flex-column justify-content-center align-items-center">
         <div class="hero-container" data-aos="fade-in">
             <h1>Mota Zorrilla</h1>
-            <p>I'm <span class="typed" data-typed-items="an Engineer, a Designer, a Developer, a Freelancer"></span></p>
+            <p>I'm <span class="typed" data-typed-items="an Engineer, a Web Developer, an AI Enthusiast, a Freelancer"></span></p>
         </div>
     </section><!-- End Hero -->
 
@@ -136,7 +136,8 @@
                             intersection of technology and creativity.
                             I specialize in crafting elegant and user-friendly web experiences,
                             utilizing a blend of front-end and back-end technologies to bring ideas to life on the
-                            digital canvas.
+                            digital canvas. My interest in artificial intelligence dates back to before its recent boom,
+                            allowing me to approach the field with a unique and seasoned perspective.
                         </p>
                         <div class="row">
                             <div class="col-lg-6">
@@ -249,14 +250,7 @@
 
                 <div class="section-title">
                     <h2>Skills</h2>
-                    <p>In the realm of web development, I possess a diverse array of competencies aimed at crafting
-                        robust and dynamic online experiences. From front-end technologies like HTML, CSS, and
-                        JavaScript, to back-end frameworks such as PHP and databases like MySQL, I leverage a
-                        comprehensive skill set to bring digital visions to life. Proficient in popular frameworks like
-                        Laravel, I excel in building scalable and efficient web applications. <br>
-                        My dedication to staying
-                        current with emerging technologies ensures that I remain at the forefront of web development
-                        trends, continuously expanding my skill set to deliver innovative solutions.</p>
+                    <p>I leverage a comprehensive skill set to bring digital visions to life, from front-end technologies to back-end frameworks. I actively use Artificial Intelligence for video and image editing, web development, and I am currently exploring AI-powered automations. My dedication to staying current with emerging technologies ensures that I remain at the forefront of web development trends, continuously expanding my skill set to deliver innovative solutions.</p>
                 </div>
 
                 <div class="row skills-content">
@@ -300,17 +294,17 @@
                         </div>
 
                         <div class="progress">
-                            <span class="skill">WordPress/CMS <i class="val">90%</i></span>
+                            <span class="skill">AI Integration <i class="val">Enthusiast</i></span>
                             <div class="progress-bar-wrap">
-                                <div class="progress-bar" role="progressbar" aria-valuenow="90" aria-valuemin="0"
+                                <div class="progress-bar" role="progressbar" aria-valuenow="85" aria-valuemin="0"
                                     aria-valuemax="100"></div>
                             </div>
                         </div>
 
                         <div class="progress">
-                            <span class="skill">Photoshop <i class="val">55%</i></span>
+                            <span class="skill">WordPress/CMS <i class="val">90%</i></span>
                             <div class="progress-bar-wrap">
-                                <div class="progress-bar" role="progressbar" aria-valuenow="55" aria-valuemin="0"
+                                <div class="progress-bar" role="progressbar" aria-valuenow="90" aria-valuemin="0"
                                     aria-valuemax="100"></div>
                             </div>
                         </div>
@@ -334,18 +328,18 @@
                         expertise. <br>
                         Excels in crafting elegant and user-friendly web experiences, utilizing a blend of front-end and
                         back-end technologies to bring ideas to life on the digital canvas.
-                        Currently venturing into Building Information Modeling (BIM) to explore innovative approaches to
-                        design, collaboration, and project management./p>
+                        Currently venturing into Building Information Modeling (BIM) and Artificial Intelligence to explore innovative approaches to
+                        design, collaboration, and project management.</p>
                 </div>
 
                 <div class="row">
                     <div class="col-lg-6" data-aos="fade-up">
-                        <h3 class="resume-title">Sumary</h3>
+                        <h3 class="resume-title">Summary</h3>
                         <div class="resume-item pb-0">
                             <h4>Héctor Mota</h4>
                             <p><em>Electrical Engineer with experience in project management and web development.
                                     My technical background is complemented by courses and skills in the fields of
-                                    electrical engineering, design, and web technologies."</em></p>
+                                    electrical engineering, design, and web technologies, and exploring AI-powered automations."</em></p>
                             <ul>
                                 <li>Puerto Ordaz, Bolívar state, Venezuela</li>
                                 <li>hector@motazorrilla.com</li>
@@ -389,6 +383,9 @@
                             <h5>2011 - Present</h5>
                             <p><em>Main Work Experience</em></p>
                             <ul>
+                                <li>Speaker "Inteligencia Artificial y las Organizaciones Iniciaticas". Jornada de Docencia Masónica. October 2025</li>
+                                <li>Speaker "La I.A. en la Masonería: Una Herramienta para la Vida Diaria". Encuentro Interlogias. September 2025</li>
+                                <li>Speaker "La Inteligencia Artificial en las Organizaciones Iniciáticas". Simposio Capitular. April 2025</li>
                                 <li>Speaker "Introduction to BIM Methodology". School of Engineering.
                                     Gran Mariscal de Ayacucho University. October 2023</li>
                                 <li>Speaker "Introduction to BIM Methodology". VII Civil Engineering Conference.
@@ -408,6 +405,7 @@
                         <div class="resume-item">
                             <h4>Main Courses</h4>
                             <ul>
+                                <li>Curso de Iniciación al Desarrollo con IA. BIG school. October 2025</li>
                                 <li>BIM Roles Bootcamp. Venezuelan Construction Chamber, BIM Forum VE. November 2023
                                 </li>
                                 <li>Lean Production Course. Innovalo Learn. Tutellus.com. 2020</li>
