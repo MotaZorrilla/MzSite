@@ -1,55 +1,74 @@
-# Proyecto: Trazados y Planchas - Repositorio Masónico
+# MzSite - Mi Portafolio Personal con Asistente de IA
 
-## Descripción General
+[![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
+[![Alpine.js](https://img.shields.io/badge/Alpine.js-77C1D2?style=for-the-badge&logo=alpine.js&logoColor=white)](https://alpinejs.dev)
+[![AI](https://img.shields.io/badge/AI-61DAFB?style=for-the-badge&logo=openai&logoColor=white)](https://)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
 
-Este proyecto es una aplicación web desarrollada en Laravel 10 que tiene como objetivo crear un repositorio digital seguro para documentos masónicos, denominados "Trazados y Planchas". La plataforma gestionará el acceso a los documentos basado en el grado masónico del usuario, asegurando que el material sea accesible solo para los miembros autorizados.
+---
 
-Para visitantes no autenticados, la página principal del repositorio (`/masonry`) ofrece una experiencia enriquecida con secciones públicas que incluyen información sobre el archivo, extractos destacados de obras, preguntas frecuentes sobre la masonería y testimonios.
+## 1. Visión del Proyecto
 
-## Estado Actual (Agosto 2025)
+Un portafolio personal de vanguardia que no solo muestra mis proyectos y habilidades, sino que también demuestra mi experiencia en tecnologías de **Inteligencia Artificial** a través de un **asistente de chat interactivo** implementado y funcional.
 
-El proyecto ha completado la fase de maquetación estática del panel de administración. Las vistas para la gestión de documentos, galería y usuarios están visualmente definidas en `resources/views/admin/dashboard.blade.php`. También se ha corregido y unificado el layout principal de la aplicación (barra de navegación lateral y pie de página) para que sea consistente tanto en la vista pública (`/masonry`) como en el panel de administración.
+---
 
-El siguiente paso es implementar la funcionalidad del **backend** para el panel de administración, comenzando por la **Gestión de Usuarios**.
+## 2. Tecnologías Principales
 
-## Tecnologías Principales
+*   **Backend:** Laravel 10.x
+*   **Frontend:** Componentes Blade, **Alpine.js** para la reactividad, Tailwind CSS.
+*   **Inteligencia Artificial:** Arquitectura lista para la conexión con cualquier API de IA (actualmente con respuesta simulada).
 
-*   **Backend:** Laravel 10
-*   **Frontend:** Blade con Bootstrap
-*   **Autenticación:** Laravel Breeze (anteriormente Laravel UI)
-*   **Base de Datos:** SQLite (para desarrollo)
-*   **Gestión de Activos:** Vite
+---
 
-## Plan de Desarrollo
+## 3. Estado del Proyecto: ¡Asistente de IA Implementado!
 
-El desarrollo de la aplicación se divide en las siguientes fases:
+### ✅ **Funcionalidades Destacadas**
 
-### FASE 1: Panel de Administración y Gestión de Contenido
-*   **Objetivo:** Crear una interfaz segura para que los administradores gestionen el contenido y los usuarios.
-*   **Tareas:**
-    *   Crear un panel de administración (`/admin`).
-    *   Implementar la funcionalidad para subir, editar y eliminar archivos (PDFs).
-    *   Gestionar las preguntas y respuestas utilizadas en el proceso de registro para la validación de grado.
+- **Asistente de IA Interactivo:**
+    - Interfaz de chat completa construida con componentes Blade y Alpine.js.
+    - Lógica de estado, envío de mensajes y recepción de respuestas totalmente funcional.
+    - Incluye características de UX como autofocus y auto-scroll.
+    - Backend preparado para conectarse a cualquier servicio de IA.
 
-### FASE 2: Registro Público y Acceso por Grado
-*   **Objetivo:** Permitir que nuevos usuarios se registren y accedan al contenido correspondiente a su grado.
-*   **Tareas:**
-    *   Desarrollar un formulario de registro público (gestionado por Laravel Breeze).
-    *   Implementar un sistema de preguntas dinámicas que se presentan durante el registro para verificar el grado del usuario.
-    *   Asegurar que los usuarios solo puedan ver y descargar los documentos autorizados para su grado.
+- **Arquitectura de Componentes:** La interfaz está construida con componentes Blade reutilizables, siguiendo las mejores prácticas de Laravel.
 
-### FASE 3: Interacción y Mejoras de UX
-*   **Objetivo:** Mejorar la experiencia del usuario y añadir funcionalidades de interacción.
-*   **Tareas:**
-    *   Añadir un sistema de comentarios en los documentos, gestionable por los administradores.
-    *   **Autenticación:** Se ha implementado el sistema de autenticación de Laravel Breeze, reemplazando los modales de Livewire por páginas completas de inicio de sesión y registro con un diseño consistente.
-    *   **Contenido Público:** La página del repositorio (`/masonry`) ahora incluye secciones públicas como "Sobre el Archivo Masónico", "Extractos Públicos Destacados", "Preguntas Frecuentes" y "Testimonios y Comentarios" para enriquecer la experiencia de los visitantes no autenticados.
+- **Base de Conocimiento Dinámica:**
+    - Incluye una ruta (`/refresh-ai-knowledge`) para generar dinámicamente una base de conocimiento a partir del contenido del propio sitio, permitiendo que la IA esté siempre actualizada.
 
-### FASE 4: Pulido General
-*   **Objetivo:** Finalizar la aplicación, mejorando la navegación y la identidad visual.
-*   **Tareas:**
-    *   Refinar la navegación interna entre las diferentes secciones.
-    *   Consolidar la marca visual y el diseño general de la plataforma.
+---
 
-### Pruebas
-*   Se están desarrollando pruebas unitarias y de características para asegurar la robustez y el correcto funcionamiento de la aplicación, especialmente para la gestión de obras masónicas.
+## 4. Guía de Puesta en Marcha
+
+```bash
+# 1. Clonar el repositorio
+git clone <url-del-repositorio> MzSite
+cd MzSite
+
+# 2. Instalar dependencias
+composer install
+npm install
+
+# 3. Configurar entorno
+cp .env.example .env
+php artisan key:generate
+
+# 4. Compilar assets e iniciar servidor
+npm run dev
+php artisan serve
+```
+
+### 🧠 **Inicializar el Asistente de IA**
+
+Una vez que el servidor esté corriendo, abre tu navegador y visita la siguiente URL para generar la base de conocimiento por primera vez:
+
+`http://localhost:8000/refresh-ai-knowledge`
+
+Después de este paso, el asistente de chat en el sitio principal estará listo para usar.
+
+---
+
+## 5. Documentación Técnica
+
+Para un desglose técnico completo de la arquitectura, la implementación del asistente y cómo conectar una IA real, consulte:
+- 📖 [`TECHNICAL_DOCUMENTATION.md`](TECHNICAL_DOCUMENTATION.md)

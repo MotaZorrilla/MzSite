@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="utf-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
     <title>MZ Portfolio </title>
@@ -31,6 +32,9 @@
 
     <!-- Template Main CSS File -->
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+
+    <!-- Alpine.js for chat functionality -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.10/dist/cdn.min.js"></script>
 
     <!-- =======================================================
       Name: motazorrilla.com
@@ -116,6 +120,74 @@
     <script src="{{ asset('js/main.js') }}"></script>
     <!-- script current age -->
     <script src="{{ asset('js/age.js') }}"></script>
+
+    <!-- AI Chatbot Components and Logic -->
+    <div x-data="chatBot()">
+        <x-site.chat-window />
+        <x-site.chat-trigger />
+    </div>
+
+    <script>
+        function chatBot() {
+            return {
+                showChat: false,
+                loading: false,
+                newMessage: '',
+                messages: [
+                    { id: 1, from: 'ai', text: 'Hello! How can I help you learn more about Héctor?' }
+                ],
+                
+                init() {
+                    this.$watch('showChat', (value) => {
+                        if (value) {
+                            this.$nextTick(() => {
+                                this.$refs.chatInput.focus();
+                            });
+                        }
+                    });
+                },
+
+                sendMessage() {
+                    if (this.newMessage.trim() === '') return;
+
+                    this.messages.push({ id: Date.now(), from: 'user', text: this.newMessage });
+                    this.scrollToBottom();
+
+                    this.loading = true;
+                    
+                    const userMessage = this.newMessage;
+                    this.newMessage = '';
+
+                    fetch('/api/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({ message: userMessage })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        this.loading = false;
+                        this.messages.push({ id: Date.now(), from: 'ai', text: data.reply });
+                        this.scrollToBottom();
+                    })
+                    .catch(error => {
+                        this.loading = false;
+                        this.messages.push({ id: Date.now(), from: 'ai', text: 'Sorry, I am having trouble connecting. Please try again later.' });
+                        this.scrollToBottom();
+                        console.error('Error:', error);
+                    });
+                },
+
+                scrollToBottom() {
+                    this.$nextTick(() => {
+                        this.$refs.messageContainer.scrollTop = this.$refs.messageContainer.scrollHeight;
+                    });
+                }
+            }
+        }
+    </script>
 
 </body>
 

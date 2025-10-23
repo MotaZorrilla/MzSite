@@ -7,6 +7,7 @@ use App\Http\Controllers\PlumberController;
 use App\Models\MasonicWork;
 use App\Http\Controllers\MasonicWorkController;
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\AIController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +24,12 @@ use App\Http\Controllers\ImageController;
 Route::get('/', function () {
     return view('site');
 });
+
+// Ruta para la API del chat de IA
+Route::post('/api/chat', [AIController::class, 'chat']);
+
+// Ruta para refrescar el conocimiento de la IA
+Route::get('/refresh-ai-knowledge', [AIController::class, 'refreshKnowledge']);
 
 // Rutas de juegos estáticos
 Route::get('/dash', function () {
