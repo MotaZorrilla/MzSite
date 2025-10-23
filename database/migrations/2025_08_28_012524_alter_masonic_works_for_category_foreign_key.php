@@ -14,8 +14,13 @@ return new class extends Migration
         Schema::table('masonic_works', function (Blueprint $table) {
             $table->unsignedBigInteger('document_category_id')->nullable()->after('description');
             $table->foreign('document_category_id')->references('id')->on('document_categories')->onDelete('set null');
+        });
 
+        Schema::table('masonic_works', function (Blueprint $table) {
             $table->dropColumn('category');
+        });
+
+        Schema::table('masonic_works', function (Blueprint $table) {
             $table->dropColumn('source');
         });
     }
@@ -26,11 +31,16 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('masonic_works', function (Blueprint $table) {
-            $table->string('category')->nullable()->after('description');
-            $table->string('source')->nullable()->after('category');
-
             $table->dropForeign(['document_category_id']);
             $table->dropColumn('document_category_id');
+        });
+
+        Schema::table('masonic_works', function (Blueprint $table) {
+            $table->string('category')->nullable()->after('description');
+        });
+
+        Schema::table('masonic_works', function (Blueprint $table) {
+            $table->string('source')->nullable()->after('category');
         });
     }
 };
